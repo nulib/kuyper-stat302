@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>4 Lab: Logistic Regression, LDA, QDA, and KNN | Data Visualization</title>
+  <meta name="description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="4 Lab: Logistic Regression, LDA, QDA, and KNN | Data Visualization" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Lab: Logistic Regression, LDA, QDA, and KNN | Data Visualization" />
+  
+  <meta name="twitter:description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University." />
+  
+
+
+
+<meta name="date" content="2019-01-01">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="lab-linear-regression.html">
+<link rel="next" href="lab-cross-validation-and-the-bootstrap.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Visualization Manual</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html"><i class="fa fa-check"></i><b>1</b> Project Workflow and Style Guide</a><ul>
+<li class="chapter" data-level="1.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#directory-setup"><i class="fa fa-check"></i><b>1.1</b> Directory Setup</a></li>
+<li class="chapter" data-level="1.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#files"><i class="fa fa-check"></i><b>1.2</b> Files</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#r-scripts"><i class="fa fa-check"></i><b>1.2.1</b> R scripts</a></li>
+<li class="chapter" data-level="1.2.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#rmarkdown"><i class="fa fa-check"></i><b>1.2.2</b> Rmarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#code-guidelines"><i class="fa fa-check"></i><b>1.3</b> Code Guidelines</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#comments"><i class="fa fa-check"></i><b>1.3.1</b> Comments</a></li>
+<li class="chapter" data-level="1.3.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#packages"><i class="fa fa-check"></i><b>1.3.2</b> Packages</a></li>
+<li class="chapter" data-level="1.3.3" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#tidyverse"><i class="fa fa-check"></i><b>1.3.3</b> Tidyverse</a></li>
+<li class="chapter" data-level="1.3.4" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#naming-objects"><i class="fa fa-check"></i><b>1.3.4</b> Naming Objects</a></li>
+<li class="chapter" data-level="1.3.5" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#spacing-and-indentation"><i class="fa fa-check"></i><b>1.3.5</b> Spacing and Indentation</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#output"><i class="fa fa-check"></i><b>1.4</b> Output</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#graphics"><i class="fa fa-check"></i><b>1.4.1</b> Graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#citingdocumenting-data"><i class="fa fa-check"></i><b>1.5</b> Citing/Documenting Data</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#sample-citation"><i class="fa fa-check"></i><b>1.5.1</b> Sample Citation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html"><i class="fa fa-check"></i><b>2</b> STAT 301-2 Final Project</a><ul>
+<li class="chapter" data-level="2.1" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html#milestones"><i class="fa fa-check"></i><b>2.1</b> Milestones</a></li>
+<li class="chapter" data-level="2.2" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html#submission"><i class="fa fa-check"></i><b>2.2</b> Submission</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html"><i class="fa fa-check"></i><b>3</b> Lab: Linear Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#libraries"><i class="fa fa-check"></i><b>3.1</b> Libraries</a></li>
+<li class="chapter" data-level="3.2" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#plots-for-assessing-linear-models"><i class="fa fa-check"></i><b>3.2.1</b> Plots for Assessing Linear Models</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#fitting-many-models"><i class="fa fa-check"></i><b>3.3</b> Fitting Many Models</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#assessing-many-models"><i class="fa fa-check"></i><b>3.3.1</b> Assessing Many Models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#examing-one-or-fewer-models"><i class="fa fa-check"></i><b>3.3.2</b> Examing One or Fewer Models</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>3.4</b> Qualitative Predictors</a></li>
+<li class="chapter" data-level="3.5" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#modified-workflow"><i class="fa fa-check"></i><b>3.5</b> Modified Workflow</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#exercise-15-section-3.7---pg-126"><i class="fa fa-check"></i><b>3.5.1</b> Exercise 15 (Section 3.7 - pg 126)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html"><i class="fa fa-check"></i><b>4</b> Lab: Logistic Regression, LDA, QDA, and KNN</a><ul>
+<li class="chapter" data-level="4.1" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#data-setup"><i class="fa fa-check"></i><b>4.1</b> Data Setup</a></li>
+<li class="chapter" data-level="4.2" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#logistic-regression"><i class="fa fa-check"></i><b>4.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="4.3" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#linear-discriminant-analysis"><i class="fa fa-check"></i><b>4.3</b> Linear Discriminant Analysis</a></li>
+<li class="chapter" data-level="4.4" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#quadratic-discriminant-analysis"><i class="fa fa-check"></i><b>4.4</b> Quadratic Discriminant Analysis</a></li>
+<li class="chapter" data-level="4.5" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#k-nearest-neighbors"><i class="fa fa-check"></i><b>4.5</b> K-Nearest Neighbors</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html"><i class="fa fa-check"></i><b>5</b> Lab: Cross-Validation and the Bootstrap</a><ul>
+<li class="chapter" data-level="5.1" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#validation-set-approach"><i class="fa fa-check"></i><b>5.1</b> Validation Set Approach</a></li>
+<li class="chapter" data-level="5.2" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#leave-one-out-cross-validation"><i class="fa fa-check"></i><b>5.2</b> Leave-One-Out-Cross Validation</a></li>
+<li class="chapter" data-level="5.3" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#k-fold-cross-validation"><i class="fa fa-check"></i><b>5.3</b> <span class="math inline">\(k\)</span>-fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.4" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#the-bootstrap"><i class="fa fa-check"></i><b>5.4</b> The Bootstrap</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#estimating-the-accuracy-of-a-statistic-of-interest"><i class="fa fa-check"></i><b>5.4.1</b> Estimating the Accuracy of a Statistic of Interest</a></li>
+<li class="chapter" data-level="5.4.2" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#estimating-the-accuracy-of-a-linear-regression-model"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Accuracy of a Linear Regression Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="glossary-of-terms.html"><a href="glossary-of-terms.html"><i class="fa fa-check"></i><b>6</b> Glossary of Terms</a></li>
+<li class="chapter" data-level="7" data-path="helpful-references.html"><a href="helpful-references.html"><i class="fa fa-check"></i><b>7</b> Helpful References</a></li>
+<li class="divider"></li>
+<li><a href="https://www.library.northwestern.edu/research/scholarly/digital-publishing.html" target="blank">Published by Northwestern University Libraries</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Visualization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="lab-logistic-regression-lda-qda-and-knn" class="section level1">
+<h1><span class="header-section-number">4</span> Lab: Logistic Regression, LDA, QDA, and KNN</h1>
+<p>This is a modified version of the <strong>Lab: Logistic Regression, LDA, QDA, and KNN</strong> section of chapter 4 from <em>Introduction to Statistical Learning with Application in R</em>. This version uses tidyverse techniques and methods that will allow for scalability and a more efficient data analytic pipeline.</p>
+<p>We will need the packages listed below. <strong>Order matters!</strong> We strategically load <code>tidyverse</code> after <code>MASS</code> so that the package <code>dplyr</code> from the tidyverse is loaded second. We do this because both packages have a <code>select()</code> function, and R will attempt to use the most recently loaded version of a function. This is called masking and you’ll get these warnings when you load packages with such conflicts. We can use <code>dplyr::select()</code> or <code>MASS::select()</code> to force R to use the function version from their respective package. This is cumbersome, so by loading <code>dplyr</code> second we are able to avoid having to use <code>dplyr:select()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load packages</span>
+<span class="kw">library</span>(MASS)
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(modelr)
+<span class="kw">library</span>(janitor)
+<span class="kw">library</span>(skimr)
+<span class="kw">library</span>(broom)
+<span class="kw">library</span>(corrplot)
+<span class="kw">library</span>(class)</code></pre>
+<div id="data-setup" class="section level2">
+<h2><span class="header-section-number">4.1</span> Data Setup</h2>
+<p>We have been discussing the concept and importance of training and testing data over the last few weeks. We will start to use it practice now by using what is sometimes called a hold-out dataset, which is really just a test dataset. Before we implement this process let’s introduce the data we will be using for this lab.</p>
+<p>We will be using the <code>Smarket</code> dataset from the <code>ISLR</code> library. Take a moment and inspect the codebook — <code>?ISLR::Smarket</code>. This data set consists of percentage returns for the S&amp;P 500 stock index over 1,250 days, from the beginning of 2001 until the end of 2005. For each date, we have recorded the percentage returns for each of the five previous trading days, <code>Lag1</code> through <code>Lag5</code>. We have also recorded <code>Volume</code> (the number of shares traded on the previous day, in billions), <code>Today</code> (the percentage return on the date in question) and <code>Direction</code> (whether the market was Up or Down on this date).</p>
+<p>In order to continue practicing the implementation of a coding structure that allows us to both scale and easily modify our workflow we will load this data from the provided <code>Smaket.csv</code> file. Notice that we re-type all character variables as factors.</p>
+<pre class="sourceCode r"><code class="sourceCode r">smarket_dat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/Smarket.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is_character, factor)</code></pre>
+<p>We would typically proceed onto examining the data with numerical summaries and visualizations, but since we plan on creating a hold-out/test dataset we should do that first. We do not want aspects of the testing data to influence our modeling training/building process. There is a balancing act here because we first need to adequately process the data in order to ensure that both the training and testing datasets have the same data structure (e.g, variable types). Or we need to ensure that any data cleaning/processing pipeline we build for the training data can also be applied to the training data.</p>
+<p><code>smarket_dat</code> is fairly simple so we can proceed directly to splitting our data into testing and training. Since this is time dependent data we will use data pre-2005 (2001-2004) for training and the 2005 data for testing. We will store these in a tibble</p>
+<pre class="sourceCode r"><code class="sourceCode r">data_db &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">train =</span> <span class="kw">list</span>(smarket_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(year <span class="op">&lt;</span><span class="st"> </span><span class="dv">2005</span>)),
+                  <span class="dt">test  =</span> <span class="kw">list</span>(smarket_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setdiff</span>(train)))</code></pre>
+<p>Now let’s examine the training potion of our data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">skim</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<pre><code>## Skim summary statistics  
+##  n obs: 998    
+##  n variables: 9    
+## 
+## Variable type: factor
+## 
+##  variable     missing    complete     n     n_unique           top_counts           ordered 
+## -----------  ---------  ----------  -----  ----------  --------------------------  ---------
+##  direction       0         998       998       2        Up: 507, Dow: 491, NA: 0     FALSE  
+## 
+## Variable type: numeric
+## 
+##  variable    missing    complete     n      mean       sd      p0       p25      p50     p75     p100      hist   
+## ----------  ---------  ----------  -----  ---------  ------  -------  -------  -------  ------  ------  ----------
+##    lag1         0         998       998    0.00096    1.23    -4.92    -0.71    0.021    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    lag2         0         998       998    0.00076    1.23    -4.92    -0.71    0.021    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    lag3         0         998       998    -0.0019    1.23    -4.92    -0.71    0.021    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    lag4         0         998       998    -0.0036    1.23    -4.92    -0.71    0.015    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    lag5         0         998       998    0.0018     1.24    -4.92    -0.71    0.021    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##   today         0         998       998    0.00045    1.23    -4.92    -0.71    0.015    0.66    5.73    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##   volume        0         998       998     1.37      0.27    0.36     1.21     1.37     1.51    2.78    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    year         0         998       998    2002.52    1.11    2001     2002     2003     2004    2004    &lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2587&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Proportions of Up/Down days</span>
+data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   direction     n  prop
+##   &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt;
+## 1 Down        491 0.492
+## 2 Up          507 0.508</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Correlations</span>
+data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">cor</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">corrplot</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/smk-corrplot-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Time trend in volume</span>
+data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">seq_along</span>(volume), <span class="dt">y =</span> volume)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/volume-time-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Checking time trend for other variables</span>
+data_db <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">unnest</span>(train) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>year, <span class="op">-</span>direction) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">seq_along</span>(value), <span class="dt">y =</span> value)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text  =</span> <span class="kw">element_blank</span>(),
+          <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>variable, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)</code></pre>
+<pre><code>FALSE `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/smk-time-trend-grid-1.png" width="672" /></p>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2><span class="header-section-number">4.2</span> Logistic Regression</h2>
+<p>We will be using fit a few logistic regressions to attempt to predict whether the stock market will go down or up. Our set of possible predictors are the five lag measurements (<code>lag1</code>, …, <code>lag5</code>) and volume of <code>volume</code> of shares (in billions) traded on the previous day. We will train the models on the training dataset and then use the testing data set to validate and compare the models.</p>
+<p>We will begin by only fitting a logistic model that uses all available predictors, but set up our workflow to allow us to easily include alternatively specified logistic models.</p>
+<p>Let’s fit the model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits &lt;-<span class="st"> </span>data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2 <span class="op">+</span><span class="st"> </span>lag3 <span class="op">+</span><span class="st"> </span>lag4 <span class="op">+</span><span class="st"> </span>lag5 <span class="op">+</span><span class="st"> </span>volume,
+                      <span class="dt">family =</span> binomial))</code></pre>
+<p>Just like with linear models we can use <code>tidy()</code>, <code>confint_tidy()</code>, <code>glance()</code>, <code>augment()</code> and <code>predict()</code> to inspect the model. While we could store this information in <code>glm_fits</code> we will hold off on this for now because we first need to understand what we will be storing and why we want it stored. Secondly it would throw a wrench into our general workflow for fitting several models (look back on how we fit several linear models).</p>
+<p>Let’s inspect the parameter estimates.</p>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;mod_01&quot;</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 7 x 5
+##   term        estimate std.error statistic p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)  0.191      0.334     0.573    0.567
+## 2 lag1        -0.0542     0.0518   -1.05     0.295
+## 3 lag2        -0.0458     0.0518   -0.884    0.377
+## 4 lag3         0.00720    0.0516    0.139    0.889
+## 5 lag4         0.00644    0.0517    0.125    0.901
+## 6 lag5        -0.00422    0.0511   -0.0826   0.934
+## 7 volume      -0.116      0.240    -0.485    0.628</code></pre>
+<p>Nothing, not even the intercept, is significant in this model. Indicating that there is no statistical evidence of an association between any of these predictors and <code>direction</code>. While none of the associations were significant, we are probably more interested in how well the model predicted <code>direction</code>. We can extract the predicted values using <code>augment()</code>, the <code>.fitted</code> values, or <code>predict()</code>. However <code>augment()</code> includes additional measures for model diagnostics (e.g. <code>.hat</code>, <code>.cooksd</code>, etc.) which can be useful. We will opt to use <code>predict()</code> for now since we want to focus on assessing the predictive capabilities of our model. We can and should circle back to model diagnostics for a more comprehensive understanding of our fitted model.</p>
+<p>It is <strong>extremely important</strong> to understand what <code>predict()</code> returns for a logistic regression. Recall that we ultimately want a predicted <code>direction</code> (<code>Up</code> or <code>Down</code>). First note that without a <code>newdata</code> argument <code>predict()</code> returns a model’s predicted values for the data it was fitted/trained on. Next, let’s apply and actually inspect the values that <code>predict()</code> returns</p>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;mod_01&quot;</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">predict</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">skim</span>()</code></pre>
+<pre><code>## 
+## Skim summary statistics
+## 
+## -- Variable type:numeric ---------------------------------------------------------------------------
+##  variable missing complete   n  mean    sd   p0    p25   p50   p75 p100
+##         .       0      998 998 0.032 0.093 -0.4 -0.021 0.036 0.088  0.4
+##      hist
+##  &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2583&gt;&lt;U+2581&gt;&lt;U+2581&gt;</code></pre>
+<p>We see <code>predict()</code> returns a numeric value and some are values are negative and some are positive. Since we use logistic regression to predict the probability of a specified category (either <code>Up</code> or <code>Down</code> in this case), we should be concerned with the negative values (probabilities cannot be negative). <strong>We need to realize</strong> that <code>predict()</code> is providing our predicted values on an alternative scale — log-odds for binomial link. This is easy to remedy by setting <code>type = &quot;response&quot;</code>, but it is easy to forget so take care with this — it also must be specified when using <code>augment()</code>. Now let’s inspect the predicted probabilities for the training data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;mod_01&quot;</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">predict</span>(<span class="dt">type =</span> <span class="st">&quot;response&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">skim</span>()</code></pre>
+<pre><code>## 
+## Skim summary statistics
+## 
+## -- Variable type:numeric ---------------------------------------------------------------------------
+##  variable missing complete   n mean    sd  p0  p25  p50  p75 p100     hist
+##         .       0      998 998 0.51 0.023 0.4 0.49 0.51 0.52  0.6 &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2583&gt;&lt;U+2581&gt;&lt;U+2581&gt;</code></pre>
+<p>We now have predicted probabilities ranging from about 0.4 to 0.6. What are these probabilities for though? We know they are for a <code>direction</code>, but are they the probabilities for <code>Up</code> or <code>Down</code>? This has to do with how the <code>direction</code> factor is encoded because <code>predict(type = &quot;response&quot;)</code> returns the probability for the category that is designated to be 1 or in mathematical notation <span class="math inline">\(Pr(Y_i=1|X_i)\)</span>. Let’s check how <code>direction</code> was encoded when we loaded, processed, and assigned the data to <code>smarket_dat</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">smarket_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># pull(): extract a column from a tibble - replacement for $</span>
+<span class="st">  </span><span class="kw">pull</span>(direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">contrasts</span>()</code></pre>
+<pre><code>##      Up
+## Down  0
+## Up    1</code></pre>
+<p>Since <code>Up</code> is assigned 1 we now know that the predicted probabilities are for <code>Up</code>. <strong>This is important because</strong> we can now change the predicted probabilities to predicted directions of the stock market. For observations with a predicted probability greater than 0.5 then we will assign it to <code>Up</code>, otherwise they will be assigned <code>Down</code>.</p>
+<p>We will use <code>demo_tib</code> to demonstrate how to calculate and inspect predictions. This is to avoid altering <code>glm_fits</code> which will house several fitted logistic models and their associated information.</p>
+<pre class="sourceCode r"><code class="sourceCode r">demo_tib &lt;-<span class="st"> </span>glm_fits <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">train_prob =</span> <span class="kw">map</span>(mod_<span class="dv">01</span>, predict, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>),
+         <span class="dt">train_direction =</span> <span class="kw">map</span>(train_prob, <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;Up&quot;</span>, <span class="st">&quot;Down&quot;</span>)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predictions for train dataset</span>
+demo_tib <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train, train_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(train_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   train_direction     n  prop
+##   &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt;
+## 1 Down              331 0.332
+## 2 Up                667 0.668</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Confusion matrix for train dataset</span>
+demo_tib <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train, train_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(direction, train_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   direction train_direction     n  prop
+##   &lt;fct&gt;     &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt;
+## 1 Down      Down              175 0.175
+## 2 Down      Up                316 0.317
+## 3 Up        Down              156 0.156
+## 4 Up        Up                351 0.352</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Model assessment (accuracy/error) for train dataset</span>
+demo_tib <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(train, train_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">correct =</span> <span class="kw">if_else</span>(train_direction <span class="op">==</span><span class="st"> </span>direction, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">train_accuracy =</span> <span class="kw">mean</span>(correct),
+            <span class="dt">train_error    =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>train_accuracy)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   train_accuracy train_error
+##            &lt;dbl&gt;       &lt;dbl&gt;
+## 1          0.527       0.473</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Model predictions for test dataset</span>
+demo_tib &lt;-<span class="st"> </span>demo_tib <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">test_prob =</span> <span class="kw">map2</span>(mod_<span class="dv">01</span>, test, predict, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>),
+         <span class="dt">test_direction =</span> <span class="kw">map</span>(test_prob, <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;Up&quot;</span>, <span class="st">&quot;Down&quot;</span>)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Model assessment (accuracy/error) for test dataset</span>
+demo_tib <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(test, test_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">correct =</span> <span class="kw">if_else</span>(test_direction <span class="op">==</span><span class="st"> </span>direction, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">test_accuracy =</span> <span class="kw">mean</span>(correct),
+            <span class="dt">test_error    =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>test_accuracy)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   test_accuracy test_error
+##           &lt;dbl&gt;      &lt;dbl&gt;
+## 1         0.480      0.520</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Confusion matrix for test dataset</span>
+demo_tib <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(test, test_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">correct =</span> <span class="kw">if_else</span>(test_direction <span class="op">==</span><span class="st"> </span>direction, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(test_direction, direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   test_direction direction     n  prop
+##   &lt;chr&gt;          &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt;
+## 1 Down           Down         77 0.306
+## 2 Down           Up           97 0.385
+## 3 Up             Down         34 0.135
+## 4 Up             Up           44 0.175</code></pre>
+<p>Time to add some other models.</p>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits &lt;-<span class="st"> </span>data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2 <span class="op">+</span><span class="st"> </span>lag3 <span class="op">+</span><span class="st"> </span>lag4 <span class="op">+</span><span class="st"> </span>lag5 <span class="op">+</span><span class="st"> </span>volume,
+                      <span class="dt">family =</span> binomial),
+         <span class="dt">mod_02 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2,
+                      <span class="dt">family =</span> binomial),
+         <span class="dt">mod_03 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>lag2,
+                      <span class="dt">family =</span> binomial),
+         <span class="dt">mod_04 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>volume,
+                      <span class="dt">family =</span> binomial),
+         <span class="dt">mod_05 =</span> <span class="kw">map</span>(train, glm, 
+                      <span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>volume,
+                      <span class="dt">family =</span> binomial)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> model_name, <span class="dt">value =</span> model_fit, <span class="kw">contains</span>(<span class="st">&quot;mod_&quot;</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function to calculate error rate</span>
+error_rate_glm &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_prob =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>),
+           <span class="dt">pred_direction =</span> <span class="kw">if_else</span>(pred_prob <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;Up&quot;</span>, <span class="st">&quot;Down&quot;</span>),
+           <span class="dt">error =</span> pred_direction <span class="op">!=</span><span class="st"> </span>direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">pull</span>(error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mean</span>()
+}
+
+<span class="co"># Function to form confusion matrix</span>
+confusion_mat_glm &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_prob =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>),
+           <span class="dt">pred_direction =</span> <span class="kw">if_else</span>(pred_prob <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;Up&quot;</span>, <span class="st">&quot;Down&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">count</span>(direction, pred_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
+}
+
+<span class="co"># Calculate model error</span>
+glm_fits &lt;-<span class="st"> </span>glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">train_error =</span> <span class="kw">map2_dbl</span>(train, model_fit, error_rate_glm),
+         <span class="dt">test_error  =</span> <span class="kw">map2_dbl</span>(test, model_fit, error_rate_glm),
+         <span class="dt">test_confusion =</span> <span class="kw">map2</span>(test, model_fit, confusion_mat_glm))  
+  
+glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_name, train_error, test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># select_if(~ !is_list(.)) %&gt;% </span>
+<span class="st">  </span><span class="kw">arrange</span>(test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">model_name</th>
+<th align="center">train_error</th>
+<th align="center">test_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">mod_02</td>
+<td align="center">0.4839679</td>
+<td align="center">0.4404762</td>
+</tr>
+<tr class="even">
+<td align="center">mod_03</td>
+<td align="center">0.4829659</td>
+<td align="center">0.4404762</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_04</td>
+<td align="center">0.4709419</td>
+<td align="center">0.4841270</td>
+</tr>
+<tr class="even">
+<td align="center">mod_05</td>
+<td align="center">0.4619238</td>
+<td align="center">0.5039683</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_01</td>
+<td align="center">0.4729459</td>
+<td align="center">0.5198413</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r">glm_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_name <span class="op">==</span><span class="st"> &quot;mod_02&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(test_confusion) </code></pre>
+<pre><code>## # A tibble: 4 x 7
+##   model_name train_error test_error direction pred_direction     n  prop
+##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;          &lt;int&gt; &lt;dbl&gt;
+## 1 mod_02           0.484      0.440 Down      Down              35 0.139
+## 2 mod_02           0.484      0.440 Down      Up                76 0.302
+## 3 mod_02           0.484      0.440 Up        Down              35 0.139
+## 4 mod_02           0.484      0.440 Up        Up               106 0.421</code></pre>
+<!--
+
+```r
+glm_fits %>% 
+  mutate(train_probs = map(mod_01, predict, type = "response"),
+         pred_direction = map(train_probs, ~ if_else(.x > 0.5, "Up", "Down") %>% factor)) %>% 
+  unnest(train, pred_direction) %>% 
+  count(pred_direction, direction) %>% 
+  mutate(prop = n/sum(n))
+```
+
+This is a little disappointing, but not at all surprising. Why shouldn't this surprise us? 
+
+
+```r
+glm_fits %>% 
+  pluck("mod_01", 1) %>% 
+  predict() %>% 
+  skim()
+```
+
+Maybe by removing the variables that are have the least significant relationship with `direction` we might find a more effective model.After all, using predictors that have no relationship with the response tends to cause a deterioration in the test error rate (since such predictors cause an increase in variance without a corresponding decrease in bias), and so removing such predictors may in turn yield an improvement.   
+-->
+</div>
+<div id="linear-discriminant-analysis" class="section level2">
+<h2><span class="header-section-number">4.3</span> Linear Discriminant Analysis</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit lda models</span>
+lda_fits &lt;-<span class="st"> </span>data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">lda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2 <span class="op">+</span><span class="st"> </span>lag3 <span class="op">+</span><span class="st"> </span>lag4 <span class="op">+</span><span class="st"> </span>lag5 <span class="op">+</span><span class="st"> </span>volume,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_02 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">lda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_03 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">lda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>lag2,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_04 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">lda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>volume,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_05 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">lda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>volume,
+                                   <span class="dt">data =</span> .x))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> model_name, <span class="dt">value =</span> model_fit, <span class="kw">contains</span>(<span class="st">&quot;mod_&quot;</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function to calculate lda error rate </span>
+error_rate_lda &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_direction =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">pluck</span>(<span class="st">&quot;class&quot;</span>),
+           <span class="dt">error =</span> pred_direction <span class="op">!=</span><span class="st"> </span>direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">pull</span>(error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mean</span>()
+}
+
+<span class="co"># Function to form lda confusion matrix</span>
+confusion_mat_lda &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_direction =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">pluck</span>(<span class="st">&quot;class&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">count</span>(direction, pred_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
+}
+
+<span class="co"># update lda_fits with error and confusion info</span>
+lda_fits &lt;-<span class="st"> </span>lda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">train_error =</span> <span class="kw">map2_dbl</span>(train, model_fit, error_rate_lda),
+         <span class="dt">test_error  =</span> <span class="kw">map2_dbl</span>(test, model_fit, error_rate_lda),
+         <span class="dt">test_confusion =</span> <span class="kw">map2</span>(test, model_fit, confusion_mat_lda))  
+  
+<span class="co"># Compare models by test_error</span>
+lda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_name, train_error, test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># select_if(~ !is_list(.)) %&gt;% </span>
+<span class="st">  </span><span class="kw">arrange</span>(test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">model_name</th>
+<th align="center">train_error</th>
+<th align="center">test_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">mod_02</td>
+<td align="center">0.4839679</td>
+<td align="center">0.4404762</td>
+</tr>
+<tr class="even">
+<td align="center">mod_03</td>
+<td align="center">0.4839679</td>
+<td align="center">0.4404762</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_04</td>
+<td align="center">0.4709419</td>
+<td align="center">0.4841270</td>
+</tr>
+<tr class="even">
+<td align="center">mod_05</td>
+<td align="center">0.4619238</td>
+<td align="center">0.5079365</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_01</td>
+<td align="center">0.4719439</td>
+<td align="center">0.5198413</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get confusion matrix for best model</span>
+lda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_name <span class="op">==</span><span class="st"> &quot;mod_02&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(test_confusion) </code></pre>
+<pre><code>## # A tibble: 4 x 7
+##   model_name train_error test_error direction pred_direction     n  prop
+##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;          &lt;int&gt; &lt;dbl&gt;
+## 1 mod_02           0.484      0.440 Down      Down              35 0.139
+## 2 mod_02           0.484      0.440 Down      Up                76 0.302
+## 3 mod_02           0.484      0.440 Up        Down              35 0.139
+## 4 mod_02           0.484      0.440 Up        Up               106 0.421</code></pre>
+</div>
+<div id="quadratic-discriminant-analysis" class="section level2">
+<h2><span class="header-section-number">4.4</span> Quadratic Discriminant Analysis</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit qda models</span>
+qda_fits &lt;-<span class="st"> </span>data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">qda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2 <span class="op">+</span><span class="st"> </span>lag3 <span class="op">+</span><span class="st"> </span>lag4 <span class="op">+</span><span class="st"> </span>lag5 <span class="op">+</span><span class="st"> </span>volume,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_02 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">qda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>lag2,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_03 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">qda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>lag2,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_04 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">qda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1 <span class="op">+</span><span class="st"> </span>volume,
+                                   <span class="dt">data =</span> .x)),
+         <span class="dt">mod_05 =</span> <span class="kw">map</span>(train, <span class="op">~</span><span class="st"> </span><span class="kw">qda</span>(<span class="dt">formula =</span> direction <span class="op">~</span><span class="st"> </span>lag1<span class="op">*</span>volume,
+                                   <span class="dt">data =</span> .x))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> model_name, <span class="dt">value =</span> model_fit, <span class="kw">contains</span>(<span class="st">&quot;mod_&quot;</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function to calculate qda error rate </span>
+error_rate_qda &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_direction =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">pluck</span>(<span class="st">&quot;class&quot;</span>),
+           <span class="dt">error =</span> pred_direction <span class="op">!=</span><span class="st"> </span>direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">pull</span>(error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mean</span>()
+}
+
+<span class="co"># Function to form qda confusion matrix</span>
+confusion_mat_qda &lt;-<span class="st"> </span><span class="cf">function</span>(data, model){
+  data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred_direction =</span> <span class="kw">predict</span>(model, <span class="dt">newdata =</span> data) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">pluck</span>(<span class="st">&quot;class&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">count</span>(direction, pred_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
+}
+
+<span class="co"># update qda_fits with error and confusion info</span>
+qda_fits &lt;-<span class="st"> </span>qda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">train_error =</span> <span class="kw">map2_dbl</span>(train, model_fit, error_rate_qda),
+         <span class="dt">test_error  =</span> <span class="kw">map2_dbl</span>(test, model_fit, error_rate_qda),
+         <span class="dt">test_confusion =</span> <span class="kw">map2</span>(test, model_fit, confusion_mat_qda))  
+  
+<span class="co"># Compare models by test_error</span>
+qda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_name, train_error, test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># select_if(~ !is_list(.)) %&gt;% </span>
+<span class="st">  </span><span class="kw">arrange</span>(test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">model_name</th>
+<th align="center">train_error</th>
+<th align="center">test_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">mod_02</td>
+<td align="center">0.4859719</td>
+<td align="center">0.4007937</td>
+</tr>
+<tr class="even">
+<td align="center">mod_03</td>
+<td align="center">0.4669339</td>
+<td align="center">0.4603175</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_05</td>
+<td align="center">0.4969940</td>
+<td align="center">0.4722222</td>
+</tr>
+<tr class="even">
+<td align="center">mod_04</td>
+<td align="center">0.5040080</td>
+<td align="center">0.5436508</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_01</td>
+<td align="center">0.4579158</td>
+<td align="center">0.5555556</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get confusion matrix for best model</span>
+qda_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_name <span class="op">==</span><span class="st"> &quot;mod_02&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(test_confusion) </code></pre>
+<pre><code>## # A tibble: 4 x 7
+##   model_name train_error test_error direction pred_direction     n   prop
+##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;          &lt;int&gt;  &lt;dbl&gt;
+## 1 mod_02           0.486      0.401 Down      Down              30 0.119 
+## 2 mod_02           0.486      0.401 Down      Up                81 0.321 
+## 3 mod_02           0.486      0.401 Up        Down              20 0.0794
+## 4 mod_02           0.486      0.401 Up        Up               121 0.480</code></pre>
+</div>
+<div id="k-nearest-neighbors" class="section level2">
+<h2><span class="header-section-number">4.5</span> K-Nearest Neighbors</h2>
+<pre class="sourceCode r"><code class="sourceCode r">#### Helper Functions
+
+<span class="co"># tidy wrapper function for knn</span>
+knn_tidy &lt;-<span class="st"> </span><span class="cf">function</span>(train, test, pred_vars, response_var, ...){
+  train_reduced &lt;-<span class="st"> </span>train <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">!!</span>pred_vars) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()
+  test_reduced  &lt;-<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">!!</span>pred_vars) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()
+  train_class   &lt;-<span class="st"> </span>train <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">!!</span>response_var) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()
+ 
+  preds &lt;-<span class="st"> </span>class<span class="op">::</span><span class="kw">knn</span>(<span class="dt">train =</span> train_reduced, 
+                      <span class="dt">test =</span> test_reduced, 
+                      <span class="dt">cl =</span> train_class, ...) 
+  
+  pred_name &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;pred_&quot;</span>, response_var)
+  <span class="kw">tibble</span>(<span class="op">!!</span>pred_name <span class="op">:</span><span class="er">=</span><span class="st"> </span>preds)
+}
+
+<span class="co"># Function to calculate knn error rate </span>
+error_rate_knn &lt;-<span class="st"> </span><span class="cf">function</span>(data, pred_value){
+  data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">bind_cols</span>(pred_value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">error =</span> direction <span class="op">!=</span><span class="st"> </span>pred_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">pull</span>(error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mean</span>()
+}
+
+<span class="co"># Function to form knn confusion matrix</span>
+confusion_mat_knn &lt;-<span class="st"> </span><span class="cf">function</span>(data, pred_value){
+  data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">bind_cols</span>(pred_value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">count</span>(direction, pred_direction) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
+}
+
+<span class="co"># Set-up tibble with predictor vars</span>
+pred_var &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">pred_set =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;lag1&quot;</span>, <span class="st">&quot;lag2&quot;</span>, <span class="st">&quot;lag3&quot;</span>, 
+                                     <span class="st">&quot;lag4&quot;</span>, <span class="st">&quot;lag5&quot;</span>, <span class="st">&quot;volume&quot;</span>), 
+                                   <span class="kw">c</span>(<span class="st">&quot;lag1&quot;</span>, <span class="st">&quot;lag2&quot;</span>)))
+
+<span class="co"># Set-up tibble with num of neighbors (k)</span>
+k_values &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">k_value =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">40</span>))
+
+<span class="co"># Set-up tibble with model fitting info &amp; fit to test dataset</span>
+knn_fits &lt;-<span class="st"> </span>data_db <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">crossing</span>(k_values) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">crossing</span>(pred_var) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">knn_preds =</span> <span class="kw">pmap</span>(<span class="kw">list</span>(train, test, pred_set,<span class="st">&quot;direction&quot;</span>, k_value),
+                          knn_tidy))
+<span class="co"># update knn_fits with error and confusion info</span>
+knn_fits &lt;-<span class="st"> </span>knn_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">test_error =</span> <span class="kw">map2_dbl</span>(test, knn_preds, error_rate_knn),
+         <span class="dt">test_confusion =</span> <span class="kw">map2</span>(test, knn_preds, confusion_mat_knn)) 
+  
+<span class="co"># Compare models by test_error</span>
+knn_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(pred_set, k_value, test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">pred_set</th>
+<th align="center">k_value</th>
+<th align="center">test_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">1</td>
+<td align="center">0.4880952</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">20</td>
+<td align="center">0.4880952</td>
+</tr>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">20</td>
+<td align="center">0.4880952</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">40</td>
+<td align="center">0.4880952</td>
+</tr>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">1</td>
+<td align="center">0.5000000</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">5</td>
+<td align="center">0.5000000</td>
+</tr>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">10</td>
+<td align="center">0.5079365</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">10</td>
+<td align="center">0.5119048</td>
+</tr>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”, “lag3”, “lag4”, “lag5”, “volume”)</td>
+<td align="center">15</td>
+<td align="center">0.5119048</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">40</td>
+<td align="center">0.5119048</td>
+</tr>
+<tr class="odd">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">5</td>
+<td align="center">0.5158730</td>
+</tr>
+<tr class="even">
+<td align="center">c(“lag1”, “lag2”)</td>
+<td align="center">15</td>
+<td align="center">0.5158730</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get confusion matrix for best model</span>
+knn_fits <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(test_error) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;test_confusion&quot;</span>, <span class="dv">1</span>)</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   direction pred_direction     n  prop
+##   &lt;fct&gt;     &lt;fct&gt;          &lt;int&gt; &lt;dbl&gt;
+## 1 Down      Down              50 0.198
+## 2 Down      Up                61 0.242
+## 3 Up        Down              62 0.246
+## 4 Up        Up                79 0.313</code></pre>
+<!--
+### Caravan Example
+
+
+```r
+caravan_dat <- read_csv("data/Caravan.csv") %>% 
+  clean_names() %>% 
+  mutate(purchase = factor(purchase, levels = c("No", "Yes")))
+```
+
+
+```r
+# Scale the numeric all numeric variables
+caravan_dat <- caravan_dat %>% 
+  mutate_if(is.numeric, ~ as.numeric(scale(.x)))
+```
+
+
+```r
+caravan_dat %>% 
+  count(purchase) %>% 
+  mutate(prop = n / sum(n))
+```
+
+
+```r
+hh <- tibble(train = caravan_dat %>% slice(-1:-1000) %>% list(),
+             test  = caravan_dat %>% slice(1:1000) %>% list(),
+             pred_set = caravan_dat %>% select(-purchase) %>% names() %>% list(),
+             k_value = c(1, 3, 5, 10, 25))
+
+set.seed(1)
+hh_fits <- hh %>% 
+  mutate(knn_preds = pmap(list(train, test, pred_set, "purchase", k_value), knn_tidy))
+
+# Function to calculate knn error rate 
+error_rate_knn <- function(data, pred_value){
+  data %>%
+    bind_cols(pred_value) %>% 
+    mutate(error = purchase != pred_purchase) %>% 
+    pull(error) %>% 
+    mean()
+}
+
+# Function to form knn confusion matrix
+confusion_mat_knn <- function(data, pred_value){
+  data %>%
+    bind_cols(pred_value) %>% 
+    count(purchase, pred_purchase) %>% 
+    mutate(prop = n / sum(n))
+}
+
+hh_fits <- hh_fits %>% 
+    mutate(test_error = map2_dbl(test, knn_preds, error_rate_knn),
+           test_confusion = map2(test, knn_preds, confusion_mat_knn)) 
+
+# Compare models by test_error
+hh_fits %>% 
+  select(k_value, test_error) %>% 
+  arrange(test_error) %>% 
+  kable()
+
+# Get confusion matrix for best model
+hh_fits %>% 
+#  arrange(test_error) %>% 
+  pluck("test_confusion", 3) %>% 
+  group_by(pred_purchase) %>% 
+  mutate(prop_conditional = n / sum(n))
+```
+
+-->
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="lab-linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lab-cross-validation-and-the-bootstrap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "serif",
+"size": "2"
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["kuyper-stat302.pdf", "kuyper-stat302.epub"],
+"toc": {
+"collapse": "section"
+},
+"highlight": "tango"
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

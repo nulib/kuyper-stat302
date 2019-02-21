@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>3 Lab: Linear Regression | Data Visualization</title>
+  <meta name="description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="3 Lab: Linear Regression | Data Visualization" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Lab: Linear Regression | Data Visualization" />
+  
+  <meta name="twitter:description" content="This manual supports the Data visualization course from the Department of Statistics at Northwestern University." />
+  
+
+
+
+<meta name="date" content="2019-01-01">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="stat-301-2-final-project.html">
+<link rel="next" href="lab-logistic-regression-lda-qda-and-knn.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Visualization Manual</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html"><i class="fa fa-check"></i><b>1</b> Project Workflow and Style Guide</a><ul>
+<li class="chapter" data-level="1.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#directory-setup"><i class="fa fa-check"></i><b>1.1</b> Directory Setup</a></li>
+<li class="chapter" data-level="1.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#files"><i class="fa fa-check"></i><b>1.2</b> Files</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#r-scripts"><i class="fa fa-check"></i><b>1.2.1</b> R scripts</a></li>
+<li class="chapter" data-level="1.2.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#rmarkdown"><i class="fa fa-check"></i><b>1.2.2</b> Rmarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#code-guidelines"><i class="fa fa-check"></i><b>1.3</b> Code Guidelines</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#comments"><i class="fa fa-check"></i><b>1.3.1</b> Comments</a></li>
+<li class="chapter" data-level="1.3.2" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#packages"><i class="fa fa-check"></i><b>1.3.2</b> Packages</a></li>
+<li class="chapter" data-level="1.3.3" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#tidyverse"><i class="fa fa-check"></i><b>1.3.3</b> Tidyverse</a></li>
+<li class="chapter" data-level="1.3.4" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#naming-objects"><i class="fa fa-check"></i><b>1.3.4</b> Naming Objects</a></li>
+<li class="chapter" data-level="1.3.5" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#spacing-and-indentation"><i class="fa fa-check"></i><b>1.3.5</b> Spacing and Indentation</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#output"><i class="fa fa-check"></i><b>1.4</b> Output</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#graphics"><i class="fa fa-check"></i><b>1.4.1</b> Graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#citingdocumenting-data"><i class="fa fa-check"></i><b>1.5</b> Citing/Documenting Data</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="project-workflow-and-style-guide.html"><a href="project-workflow-and-style-guide.html#sample-citation"><i class="fa fa-check"></i><b>1.5.1</b> Sample Citation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html"><i class="fa fa-check"></i><b>2</b> STAT 301-2 Final Project</a><ul>
+<li class="chapter" data-level="2.1" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html#milestones"><i class="fa fa-check"></i><b>2.1</b> Milestones</a></li>
+<li class="chapter" data-level="2.2" data-path="stat-301-2-final-project.html"><a href="stat-301-2-final-project.html#submission"><i class="fa fa-check"></i><b>2.2</b> Submission</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html"><i class="fa fa-check"></i><b>3</b> Lab: Linear Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#libraries"><i class="fa fa-check"></i><b>3.1</b> Libraries</a></li>
+<li class="chapter" data-level="3.2" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#plots-for-assessing-linear-models"><i class="fa fa-check"></i><b>3.2.1</b> Plots for Assessing Linear Models</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#fitting-many-models"><i class="fa fa-check"></i><b>3.3</b> Fitting Many Models</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#assessing-many-models"><i class="fa fa-check"></i><b>3.3.1</b> Assessing Many Models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#examing-one-or-fewer-models"><i class="fa fa-check"></i><b>3.3.2</b> Examing One or Fewer Models</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>3.4</b> Qualitative Predictors</a></li>
+<li class="chapter" data-level="3.5" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#modified-workflow"><i class="fa fa-check"></i><b>3.5</b> Modified Workflow</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="lab-linear-regression.html"><a href="lab-linear-regression.html#exercise-15-section-3.7---pg-126"><i class="fa fa-check"></i><b>3.5.1</b> Exercise 15 (Section 3.7 - pg 126)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html"><i class="fa fa-check"></i><b>4</b> Lab: Logistic Regression, LDA, QDA, and KNN</a><ul>
+<li class="chapter" data-level="4.1" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#data-setup"><i class="fa fa-check"></i><b>4.1</b> Data Setup</a></li>
+<li class="chapter" data-level="4.2" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#logistic-regression"><i class="fa fa-check"></i><b>4.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="4.3" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#linear-discriminant-analysis"><i class="fa fa-check"></i><b>4.3</b> Linear Discriminant Analysis</a></li>
+<li class="chapter" data-level="4.4" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#quadratic-discriminant-analysis"><i class="fa fa-check"></i><b>4.4</b> Quadratic Discriminant Analysis</a></li>
+<li class="chapter" data-level="4.5" data-path="lab-logistic-regression-lda-qda-and-knn.html"><a href="lab-logistic-regression-lda-qda-and-knn.html#k-nearest-neighbors"><i class="fa fa-check"></i><b>4.5</b> K-Nearest Neighbors</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html"><i class="fa fa-check"></i><b>5</b> Lab: Cross-Validation and the Bootstrap</a><ul>
+<li class="chapter" data-level="5.1" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#validation-set-approach"><i class="fa fa-check"></i><b>5.1</b> Validation Set Approach</a></li>
+<li class="chapter" data-level="5.2" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#leave-one-out-cross-validation"><i class="fa fa-check"></i><b>5.2</b> Leave-One-Out-Cross Validation</a></li>
+<li class="chapter" data-level="5.3" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#k-fold-cross-validation"><i class="fa fa-check"></i><b>5.3</b> <span class="math inline">\(k\)</span>-fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.4" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#the-bootstrap"><i class="fa fa-check"></i><b>5.4</b> The Bootstrap</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#estimating-the-accuracy-of-a-statistic-of-interest"><i class="fa fa-check"></i><b>5.4.1</b> Estimating the Accuracy of a Statistic of Interest</a></li>
+<li class="chapter" data-level="5.4.2" data-path="lab-cross-validation-and-the-bootstrap.html"><a href="lab-cross-validation-and-the-bootstrap.html#estimating-the-accuracy-of-a-linear-regression-model"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Accuracy of a Linear Regression Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="glossary-of-terms.html"><a href="glossary-of-terms.html"><i class="fa fa-check"></i><b>6</b> Glossary of Terms</a></li>
+<li class="chapter" data-level="7" data-path="helpful-references.html"><a href="helpful-references.html"><i class="fa fa-check"></i><b>7</b> Helpful References</a></li>
+<li class="divider"></li>
+<li><a href="https://www.library.northwestern.edu/research/scholarly/digital-publishing.html" target="blank">Published by Northwestern University Libraries</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Visualization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="lab-linear-regression" class="section level1">
+<h1><span class="header-section-number">3</span> Lab: Linear Regression</h1>
+<p>This is a modified version of the <strong>Lab: Linear Regression</strong> section of chapter 3 from <em>Introduction to Statistical Learning with Application in R</em>. This version uses tidyverse techniques and methods that will allow for scalability and a more efficient data analytic pipeline.</p>
+<div id="libraries" class="section level2">
+<h2><span class="header-section-number">3.1</span> Libraries</h2>
+<p>The <code>library()</code> function is used to load libraries, or groups of functions and data sets that are not included in the base R distribution. Basic functions that perform least squares linear regression and other simple analyses come standard with the base distribution, but more exotic functions require additional libraries. Here we load the <code>MASS</code> package, which is a very large collection of data sets and functions. We also load the ISLR package, which includes the data sets associated with this book.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(modelr)
+<span class="kw">library</span>(janitor)
+<span class="kw">library</span>(skimr)
+<span class="kw">library</span>(broom)
+<span class="kw">library</span>(corrplot)
+<span class="kw">library</span>(ggfortify)</code></pre>
+<p>If you receive an error message when loading any of these libraries, it likely indicates that the corresponding library has not yet been installed on your system. Some libraries, such as <code>MASS</code>, come with R and do not need to be separately installed on your computer. However, other packages, such as <code>ISLR</code>, must be downloaded the first time they are used. This can be done directly from within R. For example, on a Windows system, select the Install package option under the Packages tab. After you select any mirror site, a list of available packages will appear. Simply select the package you wish to install and R will automatically download the package. Alternatively, this can be done at the R command line via <code>install.packages(&quot;ISLR&quot;)</code>. This installation only needs to be done the first time you use a package. However, the <code>library()</code> function must be called each time you wish to use a given package.</p>
+</div>
+<div id="simple-linear-regression" class="section level2">
+<h2><span class="header-section-number">3.2</span> Simple Linear Regression</h2>
+<p>We will begin our exploration of linear regression with simple linear regression. As alluded to in the name, this is the simplest form of a linear model which occurs when we only have one predictor variable (i.e., an equation for a line). The general model equation is provided below. Note that there are to parameters (<span class="math inline">\(\beta_0\)</span>, the intercept; <span class="math inline">\(\beta_1\)</span> the slope) to estimate.</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1X\]</span></p>
+<p>Let’s practice fitting a simple linear model to a dataset. We will be using the <code>Boston</code> dataset from the <code>MASS</code> library, which records <code>medv</code> (median house value) for 506 suburbs of Boston. Eventually we will want to predict median home value (<code>medv</code>) using the 13 other predictors in the dataset such as <code>rm</code> (average number of rooms per house), <code>age</code> (percentage homes built prior to 1940), and <code>lstat</code> (percent of households with low socioeconomic status). As always we should examine the codebook for the dataset which can be accessed using <code>?MASS::Boston</code> — you may need to install <code>MASS</code> first.</p>
+<p>While we could access the data directly from <code>MASS</code> we will instead load it from a text file separated by <code>|</code> (Boston.txt) which has been provided. We do this to continue practicing the implementation of a coding structure that allows us to both scale and easily modify our workflow. Additionally it keeps us thinking about how best to prepare/process our data.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># clean_names() is not really needed - column names are already snake_lower_case</span>
+boston_dat &lt;-<span class="st"> </span><span class="kw">read_delim</span>(<span class="st">&quot;data/Boston.txt&quot;</span>, <span class="dt">delim =</span> <span class="st">&quot;|&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   crim = col_double(),
+##   zn = col_double(),
+##   indus = col_double(),
+##   chas = col_double(),
+##   nox = col_double(),
+##   rm = col_double(),
+##   age = col_double(),
+##   dis = col_double(),
+##   rad = col_double(),
+##   tax = col_double(),
+##   ptratio = col_double(),
+##   black = col_double(),
+##   lstat = col_double(),
+##   medv = col_double()
+## )</code></pre>
+<p>Let’s get a quick overview of our data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">skim</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># Used to improve output display</span>
+<span class="st">  </span><span class="kw">kable</span>() </code></pre>
+<pre><code>## Skim summary statistics  
+##  n obs: 506    
+##  n variables: 14    
+## 
+## Variable type: numeric
+## 
+##  variable    missing    complete     n      mean       sd        p0       p25       p50       p75      p100       hist   
+## ----------  ---------  ----------  -----  --------  --------  --------  --------  --------  --------  -------  ----------
+##    age          0         506       506    68.57     28.15      2.9      45.02      77.5     94.07      100     &lt;U+2581&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2583&gt;&lt;U+2587&gt; 
+##   black         0         506       506    356.67    91.29      0.32     375.38    391.44    396.23    396.9    &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2587&gt; 
+##    chas         0         506       506    0.069      0.25       0         0         0         0         1      &lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    crim         0         506       506     3.61      8.6      0.0063    0.082      0.26      3.68     88.98    &lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    dis          0         506       506     3.8       2.11      1.13      2.1       3.21      5.19     12.13    &lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2583&gt;&lt;U+2583&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##   indus         0         506       506    11.14      6.86      0.46      5.19      9.69      18.1     27.74    &lt;U+2583&gt;&lt;U+2586&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##   lstat         0         506       506    12.65      7.14      1.73      6.95     11.36     16.96     37.97    &lt;U+2586&gt;&lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2585&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    medv         0         506       506    22.53      9.2        5       17.02      21.2       25       50      &lt;U+2582&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    nox          0         506       506     0.55      0.12      0.38      0.45      0.54      0.62     0.87     &lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2583&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##  ptratio        0         506       506    18.46      2.16      12.6      17.4     19.05      20.2      22      &lt;U+2581&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2585&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2583&gt; 
+##    rad          0         506       506     9.55      8.71       1         4         5         24       24      &lt;U+2582&gt;&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2585&gt; 
+##     rm          0         506       506     6.28      0.7       3.56      5.89      6.21      6.62     8.78     &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2582&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##    tax          0         506       506    408.24    168.54     187       279       330       666       711     &lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2582&gt;&lt;U+2585&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2586&gt; 
+##     zn          0         506       506    11.36     23.32       0         0         0        12.5      100     &lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;</code></pre>
+<p>We see there is no missing data. That <code>medv</code> ranges from $5,000 to $50,000, which seems a little strange. Can you explain why we shouldn’t be surprised by this range of values (see codebook)? Let’s take a quick look at a correlogram to help us pick a single predictor for our simple linear model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">cor</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">corrplot</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We see that <code>lstat</code> has a sizable correlation with <code>medv</code>. So let’s use <code>lstat</code> as our predictor variable. We see from the table above that <code>lstat</code> ranges from 1.7% to 38%. Meaning we have a suburb were about 1 in every 50 households is considered to be low socioeconomic status and one suburb where about 20 in every 50 households are considered low.</p>
+<p>The model we want to fit is</p>
+<p><span class="math display">\[\mbox{mdev} = \beta_0 + \beta_1\mbox{lstat}\]</span></p>
+<p>We will be using the <code>lm()</code> function to fit our simple linear regression model. It is good practice to investigate the R documentation for an unfamiliar function (or even a familiar function) in order to understand what inputs are required, default settings/inputs, and what output will be produced (use <code>?lm</code>). The basic syntax is
+<code>lm(formula = y ∼ x, data = dataset)</code> or <code>lm(y ∼ x, dataset)</code>, where <code>y ~ x</code> defines the formula for the model we wish to fit (<code>y</code> is the response, <code>x</code> is the predictor), and <code>dataset</code> contains these two variables. Read <code>~</code> as <em>predicted by</em> so we read <code>y ~ x</code> as <em>y predicted by x.</em> Some important notes (1) the <code>data</code> is the second argument — <strong>important for piping</strong> — and (2) R automatically includes a constant term (i.e., the intercept). Let’s fit our simple linear model.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Three ways to fit &amp; store the model (2 with piping, 1 without piping)</span>
+lm_fit &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>lstat)
+lm_fit &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lm</span>(medv <span class="op">~</span><span class="st"> </span>lstat, <span class="dt">data =</span> .)
+lm_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(medv <span class="op">~</span><span class="st"> </span>lstat , <span class="dt">data =</span> boston_dat)
+
+<span class="co"># What is stored</span>
+lm_fit</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ lstat, data = boston_dat)
+## 
+## Coefficients:
+## (Intercept)        lstat  
+##       34.55        -0.95</code></pre>
+<p><code>lm_fit</code> returns some basic information about the model is output, but more detailed information, we could use <code>summary(lm_fit)</code>. This gives us p-values and standard errors for the coefficients, as well as the R<sup>2</sup> statistic and F-statistic for the model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summary</span>()</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ lstat, data = boston_dat)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.168  -3.990  -1.318   2.034  24.500 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 34.55384    0.56263   61.41   &lt;2e-16 ***
+## lstat       -0.95005    0.03873  -24.53   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.216 on 504 degrees of freedom
+## Multiple R-squared:  0.5441, Adjusted R-squared:  0.5432 
+## F-statistic: 601.6 on 1 and 504 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Unfortunately this is not very tidy and incorporating <code>summary()</code> into a analytic pipeline can be difficult. Thankfully we have the <code>broom</code> package which provides three very helpful function (see <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html">Introduction to broom</a>):</p>
+<ul>
+<li><code>tidy()</code>: constructs a data frame that summarizes the model’s statistical findings. This includes coefficients and p-values for each term in a regression, per-cluster information in clustering applications, or per-test information for multtest functions.</li>
+<li><code>augment()</code>: add columns to the original data that was modeled. This includes predictions, residuals, and cluster assignments.</li>
+<li><code>glance()</code>: construct a concise one-row summary of the model. This typically contains values such as R<sup>2</sup>, adjusted R<sup>2</sup>, and residual standard error that are computed once for the entire model.</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std_error statistic   p_value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   34.6      0.563       61.4 3.74e-236
+## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<pre><code>## # A tibble: 506 x 9
+##     medv lstat fitted se_fit   resid     hat sigma      cooksd std_resid
+##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1  24    4.98  29.8   0.406  -5.82  0.00426  6.22 0.00189       -0.939 
+##  2  21.6  9.14  25.9   0.308  -4.27  0.00246  6.22 0.000582      -0.688 
+##  3  34.7  4.03  30.7   0.433   3.97  0.00486  6.22 0.00100        0.641 
+##  4  33.4  2.94  31.8   0.467   1.64  0.00564  6.22 0.000198       0.264 
+##  5  36.2  5.33  29.5   0.396   6.71  0.00406  6.21 0.00238        1.08  
+##  6  28.7  5.21  29.6   0.399  -0.904 0.00413  6.22 0.0000440     -0.146 
+##  7  22.9 12.4   22.7   0.276   0.155 0.00198  6.22 0.000000620    0.0250
+##  8  27.1 19.2   16.4   0.374  10.7   0.00362  6.20 0.00544        1.73  
+##  9  16.5 29.9    6.12  0.724  10.4   0.0136   6.20 0.0194         1.68  
+## 10  18.9 17.1   18.3   0.326   0.592 0.00274  6.22 0.0000125      0.0954
+## # ... with 496 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glance</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<pre><code>## # A tibble: 1 x 11
+##   r_squared adj_r_squared sigma statistic  p_value    df log_lik   aic
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.544         0.543  6.22      602. 5.08e-88     2  -1641. 3289.
+## # ... with 3 more variables: bic &lt;dbl&gt;, deviance &lt;dbl&gt;, df_residual &lt;int&gt;</code></pre>
+<p>These three function allow us to extract a vast amount of useful information from a linear model and store it as a tibble. This will allow us to smoothly integrate this information into an analytic pipeline/workflow.</p>
+<p>In order to obtain a confidence interval for our model’s parameters/coefficients, we can use <code>confint_tidy</code> instead of <code>confint()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">confint_tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>() </code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   conf_low conf_high
+##      &lt;dbl&gt;     &lt;dbl&gt;
+## 1    33.4     35.7  
+## 2    -1.03    -0.874</code></pre>
+<p>By default it constructs 95% confidence intervals for each parameter in our model. Unfortunately it does not include an information detailing which interval belongs to which parameter. Be default it goes in order of inclusion into the model and the intercept is always first. This is intentional because in most cases this information is combined with information from <code>tidy()</code> which does include such information.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(lm_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">confint_tidy</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<pre><code>## # A tibble: 2 x 7
+##   term        estimate std_error statistic   p_value conf_low conf_high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   34.6      0.563       61.4 3.74e-236    33.4     35.7  
+## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88    -1.03    -0.874</code></pre>
+<p>The <code>predict()</code> function can be used to produce confidence intervals and prediction intervals for the prediction of <code>medv</code> for a given value of <code>lstat</code> — <code>predict()</code> does not have a tidy analog.</p>
+<pre class="sourceCode r"><code class="sourceCode r">new_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">lstat =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>))
+
+new_data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">predict</span>(lm_fit, <span class="dt">newdata =</span> ., <span class="dt">interval =</span> <span class="st">&quot;confidence&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>()</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##     fit   lwr   upr
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  29.8  29.0  30.6
+## 2  25.1  24.5  25.6
+## 3  20.3  19.7  20.9</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">new_data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">predict</span>(lm_fit, <span class="dt">newdata =</span> ., <span class="dt">interval =</span> <span class="st">&quot;prediction&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>()</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##     fit   lwr   upr
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  29.8 17.6   42.0
+## 2  25.1 12.8   37.3
+## 3  20.3  8.08  32.5</code></pre>
+<p>For instance, the 95% confidence interval associated with a <code>lstat</code> value of 10 is (24.47, 25.63), and the 95% prediction interval is (12.828, 37.28). As expected, the confidence and prediction intervals are centered around the same point (a predicted value of 25.05 for <code>medv</code> when <code>lstat</code> equals 10), but the prediction interval is much wider. Why is that the case? The confidence interval is a range of plausible values for the <strong>expected/average response value</strong>. The prediction interval provides a plausible range of values for the response.</p>
+<div id="plots-for-assessing-linear-models" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Plots for Assessing Linear Models</h3>
+<p>Graphical techniques are essential tools for assessing and communicating models. We will attempt to use <code>ggplot2</code> techniques whenever possible, but there are built-in diagnostic plots in base R which are useful and will get the job done. Our preference for <code>ggplot2</code> is due to it being a core tidyverse package — makes building workflows/pipelines easier — and we can quickly and efficiently build highly customizable graphics.</p>
+<p>We will need to have a dataset that contains both the original data and the additional variables from a fitted model. That is exactly what <code>augment()</code> does. Check out <code>?augment.lm</code> for details.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">augment</span>(lm_fit, <span class="dt">data =</span> .) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>()</code></pre>
+<p>Before fitting a linear model it would be wise to check that the relationship between the response and predictor(s) is linear. While it might seem obvious to do, it is a step that is unfortunately ignored more often than you would think. In fact, we skipped this step above and just went directly to fitting a linear model.</p>
+<p>We present two ways to construct this plot. One is more general and will be useful when fitting more advanced or non-standard models.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># General plot</span>
+boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> medv)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> fitted), <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># geom_smooth() depends on defined method</span>
+boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> medv)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">    </span><span class="co"># Added loess smooth for comparison</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<p>Clearly the relationship is not linear. Maybe a polynomial fit would be better, say a quadratic which we will explore later.</p>
+<p>Next we will move on to a series of model diagnostic plots. This (tidyverse reference page)[<a href="https://ggplot2.tidyverse.org/reference/fortify.lm.html" class="uri">https://ggplot2.tidyverse.org/reference/fortify.lm.html</a>] provides an example of how to take the base R diagnostic plots and construct <code>ggplot2</code> analogs — note that they use <code>fortify()</code> instead of <code>augment()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> fitted, <span class="dt">y =</span>  resid)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> fitted, <span class="dt">y =</span>  std_resid)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_qq</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> std_resid)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_abline</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-3.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> fitted, <span class="dt">y =</span> <span class="kw">sqrt</span>(<span class="kw">abs</span>(std_resid)))) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-4.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(hat) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="kw">seq_along</span>(cooksd), cooksd)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_col</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-5.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(hat, std_resid)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-6.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_augmented <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(hat, std_resid)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> cooksd)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-13-7.png" width="672" /></p>
+<!-- Add comments about plots and their utility -->
+<p>It is often useful to investigate or identify observations that are high leverage and or are influential. The <code>hat</code> values (leverage statistics) are used to identify high leverage observations — larger values indicate higher leverage. Cook’s distance (<code>cooksd</code>) are used to identify influential observations — larger values indicate higher influence. Now that we know which measures to use we can simply use <code>arrange()</code> and <code>filter()</code> to extract the observations of interest. Using <code>filter()</code> requires a cut off value (i.e. keep all observations larger than a value) which is a little problematic. We are only looking for the observations with the largest values, <code>top_n()</code> from <code>dplyr</code> to the rescue — see <code>?top_n</code> for details.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 5 observations with highest leverage</span>
+boston_augmented <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">5</span>, hat) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(hat)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(hat, medv, lstat, <span class="kw">everything</span>())</code></pre>
+<pre><code>## # A tibble: 5 x 21
+##      hat  medv lstat  crim    zn indus  chas   nox    rm   age   dis   rad
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.0269  13.8  38.0 18.5      0  18.1     0 0.668  4.14   100  1.14    24
+## 2 0.0250   7    37.0 45.7      0  18.1     0 0.693  4.52   100  1.66    24
+## 3 0.0210  13.8  34.8 11.1      0  18.1     0 0.668  4.91   100  1.17    24
+## 4 0.0204  14.4  34.4  1.63     0  21.9     0 0.624  5.02   100  1.44     4
+## 5 0.0203  17.9  34.4 18.8      0  18.1     0 0.597  4.63   100  1.55    24
+## # ... with 9 more variables: tax &lt;dbl&gt;, ptratio &lt;dbl&gt;, black &lt;dbl&gt;,
+## #   fitted &lt;dbl&gt;, se_fit &lt;dbl&gt;, resid &lt;dbl&gt;, sigma &lt;dbl&gt;, cooksd &lt;dbl&gt;,
+## #   std_resid &lt;dbl&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 5 observations with highest cook&#39;s d</span>
+boston_augmented <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">5</span>, cooksd) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(cooksd)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(cooksd, medv, lstat, <span class="kw">everything</span>())</code></pre>
+<pre><code>## # A tibble: 5 x 21
+##   cooksd  medv lstat   crim    zn indus  chas   nox    rm   age   dis   rad
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.0862  13.8  38.0 18.5       0  18.1     0 0.668  4.14 100    1.14    24
+## 2 0.0700  17.9  34.4 18.8       0  18.1     0 0.597  4.63 100    1.55    24
+## 3 0.0515  23.7  29.6  0.290     0  10.6     0 0.489  5.41   9.8  3.59     4
+## 4 0.0432  14.4  34.4  1.63      0  21.9     0 0.624  5.02 100    1.44     4
+## 5 0.0427  13.8  34.8 11.1       0  18.1     0 0.668  4.91 100    1.17    24
+## # ... with 9 more variables: tax &lt;dbl&gt;, ptratio &lt;dbl&gt;, black &lt;dbl&gt;,
+## #   fitted &lt;dbl&gt;, se_fit &lt;dbl&gt;, resid &lt;dbl&gt;, hat &lt;dbl&gt;, sigma &lt;dbl&gt;,
+## #   std_resid &lt;dbl&gt;</code></pre>
+<p>Unfortunately the dataset does not supply the name/unique identifier for the Boston suburbs it contains. A unique identifier becomes useful when comparing lists like those above. We could have added a unique identifier using <code>row_number()</code> at many different points to assist with this. Could have done this when creating <code>boston_augmented</code>. Consider going back and doing this within your code in order to help you identify if there are both suburbs on both the high leverage and high influential lists above.</p>
+<p><strong>Sidebar</strong></p>
+<p>Base R is fairly adept at creating quick diagnostic plots for linear models, which is useful when working on a one-off project or for quick exploration. <code>plot()</code> will automatically produce four diagnostic plots for a <code>lm()</code> object. In general, this command will produce one plot at a time, and hitting <strong>Enter</strong> will generate the next plot. However, it is often convenient to view all four plots together. We can achieve this by using the <code>par()</code> function, which tells R to split the display screen into separate panels so that multiple plots can be viewed simultaneously. For example, <code>par(mfrow = c(2, 2))</code> divides the plotting region into a 2×2 grid of panels.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) 
+<span class="kw">plot</span>(lm_fit)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>There is a ggplot version of the diagnostic plots produced using <code>plot(lm_fit)</code>. It requires the packages <code>ggfortify</code> and has been unstable in the past.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_fit <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">autoplot</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+</div>
+<div id="fitting-many-models" class="section level2">
+<h2><span class="header-section-number">3.3</span> Fitting Many Models</h2>
+<p>At the core of statistical/machine learning is the idea of fitting many models or slight variations of a model type for comparison. Conducting this process in an effective, efficient, and organized manner is extremely important. While the previous section provided an introduction on how to fit a simple linear model and how to examine it, this section will focus on how to incorporate these processes into a workflow that allows for the fitting and assessment of many candidate models. The <code>map</code> functions and <code>nest()</code>/<code>unnest()</code> from <code>purrr</code> will be essential.</p>
+<p>Our desire to fit many models naturally leads to multiple linear regression — multiple predictor. The syntax to do this in R is intuitive, for the most part. We just add the the desired variable to the formula definition. For instance, suppose we wanted to fit a linear model that uses a suburb’s <code>age</code> (percentage homes built prior to 1940) and <code>lstat</code> (percent of households with low socioeconomic status) to predict its <code>medv</code> (median home value). We would use <code>medv ~ lstat + age</code> for our R formula. Note that you should read the <code>+</code> as <em>and</em>. Now read the R formula as <em><code>medv</code> is predicted by <code>lstat</code> and <code>age</code></em>. Note that <code>+</code> is not a mathematical operator in this instance.</p>
+<p>The following is a list of seven candidate models we would like to fit. These models were selected to demonstrate important features of the R formula syntax.</p>
+<ol style="list-style-type: decimal">
+<li>Simple linear regression using <code>lstat</code>
+<ul>
+<li><code>medv ~ lstat</code></li>
+</ul></li>
+<li>Polynomial fit (quadratic in <code>lstat</code>)
+<ul>
+<li><code>medv ~ lstat + I(lstat^2)</code> or <code>medv ~ poly(medv, 2)</code></li>
+<li>If you need to do a calculation involving a variable such as squaring or re-centering it, then you will need to wrap it in <code>I()</code>. Alternatively you could create the variable and add to your dataset.</li>
+</ul></li>
+<li>Use only <code>lstat</code> and <code>age</code> as predictors
+<ul>
+<li><code>medv ~ lstat + age</code></li>
+</ul></li>
+<li>Allow for interaction between <code>lstat</code> and <code>age</code>
+<ul>
+<li><code>medv ~ lstat + age + lstat:age</code> or <code>medv ~ lstat*age</code></li>
+<li>Note the using ensures that the main effects of the two variables are included. Using <code>var_one:var_two</code> only includes the interaction term which can be useful.</li>
+</ul></li>
+<li>Full model or kitchen sink model (all available variables as predictors)
+<ul>
+<li><code>medv ~ .</code>,</li>
+<li>Notice that we do not have to list all variables.</li>
+</ul></li>
+<li>Everything except for <code>age</code>
+<ul>
+<li><code>medv ~ . - age</code></li>
+<li>We should <code>-</code> read as <em>do not inclue</em> or <em>remove</em>.</li>
+</ul></li>
+<li>All pair-wise interactions (including main effects)
+<ul>
+<li><code>medv ~ .*.</code></li>
+</ul></li>
+</ol>
+<p>We begin by creating a tibble/dataset/database with a list-column variable named <code>data</code> and then immediately proceed to fit our models. The list-column structure is necessary for the mapping functions. We will want to do this in one pipeline, but it is instructive to take a peak at the initial step which can be accomplished using either <code>nest()</code> or <code>tibble()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 1</span>
+boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nest</span>()</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   data               
+##   &lt;list&gt;             
+## 1 &lt;tibble [506 x 14]&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 2</span>
+<span class="kw">tibble</span>(<span class="dt">data =</span> <span class="kw">list</span>(boston_dat))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   data               
+##   &lt;list&gt;             
+## 1 &lt;tibble [506 x 14]&gt;</code></pre>
+<p>The list-column structure may seem strange here since we only have one dataset, but imagine if we had the same Boston dataset updated annually. Then we could place each year’s data within the <code>data</code> list-column. This would be particularly useful because we could seamlessly fit each of the seven models to each year of data — this might not be clear now, but it will be as you become familiar with the mapping functions.</p>
+<p>We store the data and the corresponding models in <code>boston_models</code>. We made the choice to use model names that are uninformative (<code>mod_01</code>, …, <code>mod_07</code>) because it would be difficult to come up with a naming scheme that would be both useful and not overly cumbersome.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>lstat),
+         <span class="dt">mod_02 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(lstat, <span class="dv">2</span>)),
+         <span class="dt">mod_03 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span>age),
+         <span class="dt">mod_04 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>lstat<span class="op">*</span>age),
+         <span class="dt">mod_05 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>.),
+         <span class="dt">mod_06 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age),
+         <span class="dt">mod_07 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> medv <span class="op">~</span><span class="st"> </span>.<span class="op">*</span>.))
+
+boston_models</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   data            mod_01   mod_02   mod_03  mod_04  mod_05  mod_06  mod_07 
+##   &lt;list&gt;          &lt;list&gt;   &lt;list&gt;   &lt;list&gt;  &lt;list&gt;  &lt;list&gt;  &lt;list&gt;  &lt;list&gt; 
+## 1 &lt;tibble [506 x~ &lt;S3: lm&gt; &lt;S3: lm&gt; &lt;S3: l~ &lt;S3: l~ &lt;S3: l~ &lt;S3: l~ &lt;S3: l~</code></pre>
+<p>It should be clear that <code>boston_models</code> is not in a tidy format. The models are spread over several columns so we will need to gather them up.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models &lt;-<span class="st"> </span>boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> model_name, <span class="dt">value =</span> model_fit, <span class="op">-</span>data)
+
+boston_models</code></pre>
+<pre><code>## # A tibble: 7 x 3
+##   data                model_name model_fit
+##   &lt;list&gt;              &lt;chr&gt;      &lt;list&gt;   
+## 1 &lt;tibble [506 x 14]&gt; mod_01     &lt;S3: lm&gt; 
+## 2 &lt;tibble [506 x 14]&gt; mod_02     &lt;S3: lm&gt; 
+## 3 &lt;tibble [506 x 14]&gt; mod_03     &lt;S3: lm&gt; 
+## 4 &lt;tibble [506 x 14]&gt; mod_04     &lt;S3: lm&gt; 
+## 5 &lt;tibble [506 x 14]&gt; mod_05     &lt;S3: lm&gt; 
+## 6 &lt;tibble [506 x 14]&gt; mod_06     &lt;S3: lm&gt; 
+## 7 &lt;tibble [506 x 14]&gt; mod_07     &lt;S3: lm&gt;</code></pre>
+<p>Now we have a tidy database containing our fitted models and its corresponding data. We could save <code>boston_models</code> — <code>save_rds()</code> — for later usage. This is especially useful when model fitting is time consuming.</p>
+<div id="assessing-many-models" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Assessing Many Models</h3>
+<p>Let’s assess how each model fit the data before digging into the particulars of each model. The <code>glance()</code> functions returns many model assessment measures and can seamlessly applied to each model fit using <code>map()</code>. The trick is accessing the the information once it is added to the <code>boston_models</code> and recognizing it is added as list-column. The <code>unnest()</code> function is how we unpack the information contained in a list-column — see <code>?unnest()</code> for details.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assessing models with AIC</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance =</span> <span class="kw">map</span>(model_fit, glance)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># .drop = TRUE: drops all other list-columns (get rid of cluter)</span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_glance, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(AIC) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_name, AIC, <span class="kw">everything</span>())</code></pre>
+<pre><code>## # A tibble: 7 x 12
+##   model_name   AIC r.squared adj.r.squared sigma statistic   p.value    df
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
+## 1 mod_07     2581.     0.921         0.904  2.85      53.2 6.49e-181    92
+## 2 mod_06     3026.     0.741         0.734  4.74     117.  6.08e-136    13
+## 3 mod_05     3028.     0.741         0.734  4.75     108.  6.72e-135    14
+## 4 mod_02     3171.     0.641         0.639  5.52     449.  1.56e-112     3
+## 5 mod_04     3280.     0.556         0.553  6.15     209.  4.86e- 88     4
+## 6 mod_03     3283.     0.551         0.549  6.17     309.  2.98e- 88     3
+## 7 mod_01     3289.     0.544         0.543  6.22     602.  5.08e- 88     2
+## # ... with 4 more variables: logLik &lt;dbl&gt;, BIC &lt;dbl&gt;, deviance &lt;dbl&gt;,
+## #   df.residual &lt;int&gt;</code></pre>
+<p>We can use a visualization to inspect the models on several assessment measures. We have included a few other model assessment measures from the <code>modelr</code> package — see <code>?mae</code> for details on each. This also provides an opportunity to demonstrate the use of a <code>map2</code> function. Note that the <code>_dbl</code> on these function is made necessary by the <code>.drop = TRUE</code> argument in <code>unnest()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance =</span> <span class="kw">map</span>(model_fit, glance),
+         <span class="dt">mae  =</span> <span class="kw">map2_dbl</span>(model_fit, data, mae),
+         <span class="dt">rmse =</span> <span class="kw">map2_dbl</span>(model_fit, data, rmse),
+         <span class="dt">mape =</span> <span class="kw">map2_dbl</span>(model_fit, data, mape)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_glance, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_name, r.squared, adj.r.squared, AIC, BIC, deviance, 
+         sigma, rmse, mae, mape) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> measure, <span class="dt">value =</span> value, <span class="op">-</span>model_name) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(value, model_name)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>measure, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We can quickly compare models using any of these assessment measures. The story is pretty much the same across the measures. Not surprisingly, the more flexible models (<code>mod_05</code>, <code>mod_06</code>, &amp; <code>mod_07</code>) do a much better job of fitting the data than the less flexible models. We also see that <code>mod_02</code> is a vast improvement over <code>mod_01</code>. Why might that be? Should we be using this to determine which model might preform best on Boston suburb from 2018? No, we are using the same data to assess the model that we used to train/build it. We can use these assessment measures to determine which models fit this particular dataset the best and to develop some insight into the type of model we should consider using for future dataset.</p>
+<p>It will be useful to store the model related information from <code>glance()</code>, <code>tidy()</code>, <code>confidnt_tidy()</code>, and <code>augment()</code> within our model database. This is seamlessly achieved by using the <code>map()</code> function. We also used a <code>map2()</code> function to ensure the augment output was consistent across models and bind the output from <code>tidy()</code> and <code>confint_tidy()</code> together.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models &lt;-<span class="st"> </span>boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance  =</span> <span class="kw">map</span>(model_fit, glance),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map</span>(model_fit, tidy),
+         <span class="dt">add_tidy    =</span> <span class="kw">map</span>(model_fit, confint_tidy),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map2</span>(mod_tidy, add_tidy, bind_cols),
+         <span class="dt">mod_augment =</span> <span class="kw">map2</span>(model_fit, data, augment)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>add_tidy)</code></pre>
+<p>Now we have a tidy database containing our fitted models, its corresponding data, and assorted information concerning these models. Again this would be useful to save <code>boston_models</code> — <code>save_rds()</code> — for later usage.</p>
+<p>Let’s build a graphic to compare the estimated coefficients for a few predictor variables across the models. One way to do this is to plot the 95% confidence intervals per model for the variables of interest. We can achieve this by</p>
+<ul>
+<li>extracting the tidy information from <code>boston_models</code>,</li>
+<li>keep only the terms we would like to examine, and</li>
+<li>build the plot.</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;lstat&quot;</span>, <span class="st">&quot;age&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(model_name, estimate)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_pointrange</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>term, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>Notice that <code>mod_02</code>, the polynomial fit, does not appear in these plots. This is actually a good thing because we want terms from each model to actually be comparable. The polynomial fit, <code>mod_02</code>, does estimate a coefficient for <code>poly(lstat, 2)1</code> (the linear term), but it is not compatible to the other model’s estimates because <code>poly()</code> uses an orthogonalization fitting method — see <code>poly()</code> for details. We could address this by setting <code>raw = TRUE</code> in our pipeline’s <code>poly()</code> call, but we will leave that for you to attempt. Still it would be nice to see how the polynomial fit compares to the simple linear model we began with. Let’s plot the fitted models (<code>mod_01</code> &amp; <code>mod_02</code>) and we will see that the polynomial model appears to fit the data better which is not surprising given the model assessment measures we have above.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mod_01&quot;</span>, <span class="st">&quot;mod_02&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_augment) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> medv)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .fitted, <span class="dt">color =</span> model_name), <span class="dt">size =</span> <span class="dv">1</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="examing-one-or-fewer-models" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Examing One or Fewer Models</h3>
+<p>The structure of <code>boston_models</code> allows for a workflow/pipeline that is extremely useful for exploring, assessing, and comparing many models. We avoid having many unnecessary intermediate objects to keep track of and we can quickly adjust our pipeline with any corrections or additions.</p>
+<p>What if we want to focus on one of the models contained in <code>boston_models</code>? One-off investigations or explorations can be useful as a check on your coding, for gaining insight into the data, or developing ideas for more models to fit. It would be nice to be able to quickly extract the desired information which in most instances can be done using some combination of <code>filter()</code>, <code>select()</code>, and <code>unnest()</code>, or R’s accessor syntax (e.g. <code>$</code>, <code>[[]]</code>, <code>[]</code>). Luckily <code>purrr</code> provides <code>pluck()</code>.</p>
+<p><code>pluck()</code> is particularly useful for extracting elements from a list-column that are not in a tibble format with the same dimensions. Such as the <code>model_fit</code> list-column in <code>boston_models</code>. Suppose we want to quickly extract the fit for <code>mod_02</code> and examine it.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Quick diagnostic plots</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># use plot() if autoplot() doesn&#39;t work</span>
+<span class="st">  </span><span class="kw">autoplot</span>() </code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>Unlike the diagnostic plots for <code>mod_01</code> there is no discernible pattern in the residuals.</p>
+<p>We could also use analysis of variance (ANOVA) to examine this model and statistically compare it to <code>mod_01</code>. Note that <code>mod_01</code> is a linear submodel <code>mod_02</code>. This is because the only difference between these models is the quadratic term in <code>mod_02</code> (<code>lstat</code><sup>2</sup>). If we set the coefficient on the quadratic term to 0 then <code>mod_02</code> would reduce to <code>mod_01</code> which is why <code>mod_01</code> is a submodel of <code>mod_02</code>. We can use the <code>anova()</code> function to perform a hypothesis test comparing the two models (provided one is a submodel). The null hypothesis is that the two models fit the data equally well, and the alternative hypothesis is that the full model (not the submodel) is superior. To do this without <code>pluck()</code> can be a pain.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># # Without pluck()</span>
+<span class="co"># boston_models %&gt;%</span>
+<span class="co">#   filter(model_name %in% c(&quot;mod_01&quot;, &quot;mod_02&quot;)) %&gt;%</span>
+<span class="co">#   select(model_name, model_fit) %&gt;%</span>
+<span class="co">#   spread(key = model_name, value = model_fit) %&gt;% </span>
+<span class="co">#   transmute(test = map2(mod_01, mod_02, anova)) %&gt;% </span>
+<span class="co">#   unnest()</span>
+
+<span class="kw">anova</span>(boston_models <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">1</span>),
+      boston_models <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">2</span>))</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: medv ~ lstat
+## Model 2: medv ~ poly(lstat, 2)
+##   Res.Df   RSS Df Sum of Sq     F    Pr(&gt;F)    
+## 1    504 19472                                 
+## 2    503 15347  1    4125.1 135.2 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Here the F-statistic is 135 and the associated p-value is virtually zero. This provides very clear evidence that the model containing the predictors <code>lstat</code> and <code>lstat</code><sup>2</sup> is far superior to the model that only contains the predictor <code>lstat</code>. This is not surprising, since earlier we saw evidence for non-linearity in the relationship between <code>medv</code> and <code>lstat</code>.</p>
+<p>Maybe we want to examine the variance inflation factors for the full model, <code>mod_05</code>. The <code>vif()</code> function, part of the <code>car</code> package, can be used to compute variance inflation factors. We’ve added a few more steps to the pipeline to provide a useful presentation of the output. You may need to install the <code>car</code> package.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>car<span class="op">::</span><span class="kw">vif</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># Quick way to turn a named vector to a tibble</span>
+<span class="st">  </span><span class="kw">enframe</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(value))</code></pre>
+<pre><code>## # A tibble: 13 x 2
+##    name    value
+##    &lt;chr&gt;   &lt;dbl&gt;
+##  1 tax      9.01
+##  2 rad      7.48
+##  3 nox      4.39
+##  4 indus    3.99
+##  5 dis      3.96
+##  6 age      3.10
+##  7 lstat    2.94
+##  8 zn       2.30
+##  9 rm       1.93
+## 10 ptratio  1.80
+## 11 crim     1.79
+## 12 black    1.35
+## 13 chas     1.07</code></pre>
+</div>
+</div>
+<div id="qualitative-predictors" class="section level2">
+<h2><span class="header-section-number">3.4</span> Qualitative Predictors</h2>
+<p>We will attempt to predict car seat <code>sales</code> for 400 locations using a number of predictors — both quantitative and qualitative. The data is contained in the provided Carseats.csv file. It is also part of the <code>ISLR</code> package so it would be wise to inspect its codebook — <code>?ISLR::Carseats</code>. Remember that instead of loading the data from <code>ISLR</code> we read it in from the provided file in order to continue practicing a coding structure that allows us to both scale and easily modify our workflow and it will keep us thinking about what steps are necessary to prepare/process our data.</p>
+<p>We provide two options for reading in the data. The first is useful when we want to re-type all character variables to factors and don’t have a preference for the order of the levels, which can be helpful for datasets with a large number of variables. In the second option we manually type the factor variables and decide on the ordering. We could use a hybrid of the options to quickly re-type variables and then follow it by re-leveling the factors we want re-leveled — use <code>fct_relevel()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 1</span>
+carseats_dat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/Carseats.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Sales = col_double(),
+##   CompPrice = col_double(),
+##   Income = col_double(),
+##   Advertising = col_double(),
+##   Population = col_double(),
+##   Price = col_double(),
+##   ShelveLoc = col_character(),
+##   Age = col_double(),
+##   Education = col_double(),
+##   Urban = col_character(),
+##   US = col_character()
+## )</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 2</span>
+carseats_dat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/Carseats.csv&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">shelve_loc =</span> <span class="kw">factor</span>(shelve_loc, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Bad&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;Good&quot;</span>)),
+         <span class="dt">urban      =</span> <span class="kw">factor</span>(urban, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),
+         <span class="dt">us         =</span> <span class="kw">factor</span>(urban, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Sales = col_double(),
+##   CompPrice = col_double(),
+##   Income = col_double(),
+##   Advertising = col_double(),
+##   Population = col_double(),
+##   Price = col_double(),
+##   ShelveLoc = col_character(),
+##   Age = col_double(),
+##   Education = col_double(),
+##   Urban = col_character(),
+##   US = col_character()
+## )</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hybrid </span>
+carseats_dat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/Carseats.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">shelve_loc =</span> <span class="kw">fct_relevel</span>(shelve_loc, <span class="st">&quot;Bad&quot;</span>, <span class="st">&quot;Medium&quot;</span>))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Sales = col_double(),
+##   CompPrice = col_double(),
+##   Income = col_double(),
+##   Advertising = col_double(),
+##   Population = col_double(),
+##   Price = col_double(),
+##   ShelveLoc = col_character(),
+##   Age = col_double(),
+##   Education = col_double(),
+##   Urban = col_character(),
+##   US = col_character()
+## )</code></pre>
+<p>Let’s take a quick look at the data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">carseats_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">skim</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<pre><code>## Skim summary statistics  
+##  n obs: 400    
+##  n variables: 11    
+## 
+## Variable type: factor
+## 
+##   variable     missing    complete     n     n_unique               top_counts                ordered 
+## ------------  ---------  ----------  -----  ----------  -----------------------------------  ---------
+##  shelve_loc       0         400       400       3        Med: 219, Bad: 96, Goo: 85, NA: 0     FALSE  
+##    urban          0         400       400       2            Yes: 282, No: 118, NA: 0          FALSE  
+##      us           0         400       400       2            Yes: 258, No: 142, NA: 0          FALSE  
+## 
+## Variable type: numeric
+## 
+##   variable      missing    complete     n      mean       sd      p0     p25     p50      p75     p100       hist   
+## -------------  ---------  ----------  -----  --------  --------  ----  -------  ------  -------  -------  ----------
+##  advertising       0         400       400     6.63      6.65     0       0       5       12       29      &lt;U+2587&gt;&lt;U+2582&gt;&lt;U+2582&gt;&lt;U+2583&gt;&lt;U+2582&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##      age           0         400       400    53.32      16.2     25    39.75    54.5     66       80      &lt;U+2586&gt;&lt;U+2586&gt;&lt;U+2586&gt;&lt;U+2585&gt;&lt;U+2586&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2586&gt; 
+##  comp_price        0         400       400    124.97    15.33     77     115     125      135      175     &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2583&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2583&gt;&lt;U+2581&gt;&lt;U+2581&gt; 
+##   education        0         400       400     13.9      2.62     10     12       14      16       18      &lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2583&gt;&lt;U+2583&gt;&lt;U+2583&gt;&lt;U+2583&gt;&lt;U+2585&gt;&lt;U+2583&gt; 
+##    income          0         400       400    68.66     27.99     21    42.75     69      91       120     &lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2585&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2586&gt;&lt;U+2585&gt; 
+##  population        0         400       400    264.84    147.38    10     139     272     398.5     509     &lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2586&gt;&lt;U+2586&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2587&gt; 
+##     price          0         400       400    115.8     23.68     24     100     117      131      191     &lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2582&gt;&lt;U+2586&gt;&lt;U+2587&gt;&lt;U+2585&gt;&lt;U+2582&gt;&lt;U+2581&gt; 
+##     sales          0         400       400     7.5       2.82     0     5.39     7.49    9.32     16.27    &lt;U+2581&gt;&lt;U+2582&gt;&lt;U+2587&gt;&lt;U+2587&gt;&lt;U+2586&gt;&lt;U+2583&gt;&lt;U+2582&gt;&lt;U+2581&gt;</code></pre>
+<p>The <code>Carseats</code> data includes qualitative predictors such as <code>shelve_loc</code>, an indicator of the quality of the shelving location — that is, the space within a store in which the car seat is displayed — at each location. The predictor <code>shelv_loc</code> takes on three possible values, <code>Bad</code>, <code>Medium</code>, and <code>Good</code>.</p>
+<p>Given a qualitative variable such as <code>shelve_loc</code>, R generates dummy variables automatically. Below we fit two simple linear regressions using <code>shelve_loc</code> where the only difference being that one includes an intercept term (<code>mod_01</code>) and the other does not (<code>mod_02</code>). We also fit a couple of multiple regression models.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Organize fitted models</span>
+carseats_models &lt;-<span class="st"> </span>carseats_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_01 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> sales <span class="op">~</span><span class="st"> </span>shelve_loc),
+         <span class="dt">mod_02 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> sales <span class="op">~</span><span class="st"> </span>shelve_loc <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),
+         <span class="dt">mod_03 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> sales <span class="op">~</span><span class="st"> </span>.),
+         <span class="dt">mod_04 =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> sales <span class="op">~</span><span class="st"> </span>. <span class="op">+</span><span class="st"> </span>income<span class="op">:</span>advertising <span class="op">+</span><span class="st"> </span>price<span class="op">:</span>age)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> model_name, <span class="dt">value =</span> model_fit, <span class="op">-</span>data)
+
+<span class="co"># Model fit information </span>
+carseats_models &lt;-<span class="st"> </span>carseats_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance  =</span> <span class="kw">map</span>(model_fit, glance),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map</span>(model_fit, tidy),
+         <span class="dt">add_tidy    =</span> <span class="kw">map</span>(model_fit, confint_tidy),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map2</span>(mod_tidy, add_tidy, bind_cols),
+         <span class="dt">mod_augment =</span> <span class="kw">map2</span>(model_fit, data, augment)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>add_tidy)</code></pre>
+<p>Let’s begin by looking over the estimates produced by the first two models. Since there is no intercept in <code>mod_02</code> the estimated coefficients are equal to the mean sales for each of our three shelve location categories. We see that the estimated intercept for <code>mod_01</code> is the same as the estimate for <code>shelve_locBad</code> in the <code>mod_02</code>. Since <code>Bad</code> is the reference group in <code>mod_01</code> the intercept for the model is equal to the mean sales for that group. The other coefficients in <code>mod_01</code> provide the difference between the indicated category and the model’s reference group. Therefore, if we add the estimate for <code>Good</code> to the intercept in <code>mod_01</code> we will get the mean sales for the <code>Good</code> shelve location category. Which is directly provided in <code>mod_02</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">carseats_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mod_01&quot;</span>, <span class="st">&quot;mod_02&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">model_name</th>
+<th align="center">term</th>
+<th align="center">estimate</th>
+<th align="center">std.error</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+<th align="center">conf.low</th>
+<th align="center">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">mod_01</td>
+<td align="center">(Intercept)</td>
+<td align="center">5.522917</td>
+<td align="center">0.2387665</td>
+<td align="center">23.131038</td>
+<td align="center">0</td>
+<td align="center">5.053512</td>
+<td align="center">5.992321</td>
+</tr>
+<tr class="even">
+<td align="center">mod_01</td>
+<td align="center">shelve_locMedium</td>
+<td align="center">1.783659</td>
+<td align="center">0.2863562</td>
+<td align="center">6.228811</td>
+<td align="center">0</td>
+<td align="center">1.220695</td>
+<td align="center">2.346623</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_01</td>
+<td align="center">shelve_locGood</td>
+<td align="center">4.691083</td>
+<td align="center">0.3484201</td>
+<td align="center">13.463871</td>
+<td align="center">0</td>
+<td align="center">4.006104</td>
+<td align="center">5.376062</td>
+</tr>
+<tr class="even">
+<td align="center">mod_02</td>
+<td align="center">shelve_locBad</td>
+<td align="center">5.522917</td>
+<td align="center">0.2387665</td>
+<td align="center">23.131038</td>
+<td align="center">0</td>
+<td align="center">5.053512</td>
+<td align="center">5.992321</td>
+</tr>
+<tr class="odd">
+<td align="center">mod_02</td>
+<td align="center">shelve_locMedium</td>
+<td align="center">7.306575</td>
+<td align="center">0.1580836</td>
+<td align="center">46.219681</td>
+<td align="center">0</td>
+<td align="center">6.995790</td>
+<td align="center">7.617361</td>
+</tr>
+<tr class="even">
+<td align="center">mod_02</td>
+<td align="center">shelve_locGood</td>
+<td align="center">10.214000</td>
+<td align="center">0.2537462</td>
+<td align="center">40.252822</td>
+<td align="center">0</td>
+<td align="center">9.715146</td>
+<td align="center">10.712854</td>
+</tr>
+</tbody>
+</table>
+<p>Is there really a difference between <code>mod_01</code> and <code>mod_02</code>? No, there is no difference other than how the information is encoded and extracted from the model. We just need to do a little adding or subtracting to move from one coefficient/parameter estimate to the other. What is important to realize here is that even though the terms share a name (or common symbol) they do not always estimate the same quantity.</p>
+<p>Let’s move on and check if <code>mod_04</code> fits the data better than <code>mod_03</code>. The only difference between these models is a few interactions terms.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">anova</span>(carseats_models <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">3</span>),
+      carseats_models <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;model_fit&quot;</span>, <span class="dv">4</span>))</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: sales ~ comp_price + income + advertising + population + price + 
+##     shelve_loc + age + education + urban + us
+## Model 2: sales ~ comp_price + income + advertising + population + price + 
+##     shelve_loc + age + education + urban + us + income:advertising + 
+##     price:age
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)  
+## 1    388 402.83                             
+## 2    386 394.23  2    8.6045 4.2125 0.0155 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Yes, <code>mod_04</code> does provide significantly better fit to the data. Let’s take a quick look at this model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">carseats_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;mod_tidy&quot;</span>, <span class="dv">4</span>)</code></pre>
+<pre><code>## # A tibble: 14 x 7
+##    term           estimate std.error statistic   p.value conf.low conf.high
+##    &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 (Intercept)    6.58      1.01         6.52  2.22e- 10  4.59e+0  8.56    
+##  2 comp_price     0.0929    0.00412     22.6   1.64e- 72  8.48e-2  0.101   
+##  3 income         0.0109    0.00260      4.18  3.57e-  5  5.77e-3  0.0160  
+##  4 advertising    0.0702    0.0226       3.11  2.03e-  3  2.58e-2  0.115   
+##  5 population     0.000159  0.000368     0.433 6.65e-  1 -5.64e-4  0.000883
+##  6 price         -0.101     0.00744    -13.5   1.74e- 34 -1.15e-1 -0.0862  
+##  7 shelve_locMe~  1.95      0.126       15.5   1.34e- 42  1.71e+0  2.20    
+##  8 shelve_locGo~  4.85      0.153       31.7   1.38e-109  4.55e+0  5.15    
+##  9 age           -0.0579    0.0160      -3.63  3.18e-  4 -8.93e-2 -0.0266  
+## 10 education     -0.0209    0.0196      -1.06  2.88e-  1 -5.94e-2  0.0177  
+## 11 urbanYes       0.140     0.112        1.25  2.13e-  1 -8.08e-2  0.361   
+## 12 usYes         -0.158     0.149       -1.06  2.91e-  1 -4.50e-1  0.135   
+## 13 income:adver~  0.000751  0.000278     2.70  7.29e-  3  2.04e-4  0.00130 
+## 14 price:age      0.000107  0.000133     0.801 4.24e-  1 -1.55e-4  0.000369</code></pre>
+</div>
+<div id="modified-workflow" class="section level2">
+<h2><span class="header-section-number">3.5</span> Modified Workflow</h2>
+<p>The general work flow is the same, but maybe we are provided with a list of formulas or more likely it is more efficient for us to create a list of formulas. For instance, suppose we want to fit all possible simple linear regression for predicting <code>medv</code> in the <code>boston_dat</code> dataset. Creating this list of formulas is much easier than having to code each individual formula. The workflow also has the benefit of being able to seamlessly incorporate any additional variables that might be added to the Boston dataset.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setup formulas</span>
+predictor_var &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">names</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="st">&quot;medv&quot;</span>)
+fmla &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;medv ~&quot;</span>, predictor_var)
+
+<span class="co"># Fit and store the models</span>
+boston_models &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">data =</span> <span class="kw">list</span>(boston_dat), 
+                        <span class="dt">model_name =</span> <span class="kw">c</span>(predictor_var, <span class="st">&quot;full&quot;</span>) , 
+                        <span class="dt">fmla =</span> <span class="kw">c</span>(fmla, <span class="st">&quot;medv ~ .&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model_fit =</span> <span class="kw">map2</span>(fmla, data, lm)) 
+
+<span class="co"># Model fit summaries/information</span>
+boston_models &lt;-<span class="st"> </span>boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance  =</span> <span class="kw">map</span>(model_fit, glance),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map</span>(model_fit, tidy),
+         <span class="dt">add_tidy    =</span> <span class="kw">map</span>(model_fit, confint_tidy),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map2</span>(mod_tidy, add_tidy, bind_cols),
+         <span class="dt">mod_augment =</span> <span class="kw">map2</span>(model_fit, data, augment)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>add_tidy)
+
+<span class="co"># Scatterplot to compare SLR to Full estimates</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model_type =</span> <span class="kw">if_else</span>(model_name <span class="op">!=</span><span class="st"> &quot;full&quot;</span>, <span class="st">&quot;slr&quot;</span>, <span class="st">&quot;full&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_type, term, estimate) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(model_type, estimate) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(full, slr)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) </code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Alternative to scatterplot</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model_type =</span> <span class="kw">if_else</span>(model_name <span class="op">!=</span><span class="st"> &quot;full&quot;</span>, <span class="st">&quot;slr&quot;</span>, <span class="st">&quot;full&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(model_type, estimate)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_pointrange</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>term, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-34-2.png" width="672" /></p>
+<div id="exercise-15-section-3.7---pg-126" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Exercise 15 (Section 3.7 - pg 126)</h3>
+<p>Let’s use this modified workflow to work through Exercise 15 from Section 3.7 of <em>Introduction to Statistical Learning</em>. Again it is important not to just copy and paste a workflow. You need to think about the process and what might be motivating the data structure we are building. This can only be achieved by reading through the question in its entirety and sketching our a plan of action that will allow us to answer the question. It is also useful to think beyond the questions being asked directly and anticipate indirect questions of explorations that may arise (one reason for using a flexible pipeline).</p>
+<p>Also, realize the resulting code that you see below is a cleaned up version of the process. You don’t see the iterative process by which we encounter issues and accordingly adjust the pipeline. Putting in the time to justify every line of code will help you understand pipeline development and analysis process.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setup formulas for simple linear regressions =</span>
+predictor_var &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">names</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="st">&quot;crim&quot;</span>)
+fmla &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;crim ~&quot;</span>, predictor_var)
+
+<span class="co"># adding full model</span>
+predictor_var &lt;-<span class="st"> </span><span class="kw">c</span>(predictor_var, <span class="st">&quot;all_vars&quot;</span>)
+fmla &lt;-<span class="st"> </span><span class="kw">c</span>(fmla, <span class="st">&quot;crim ~ .&quot;</span>)
+
+<span class="co"># Fit and store the models</span>
+boston_models &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">data =</span> <span class="kw">list</span>(boston_dat), 
+                        predictor_var, 
+                        fmla) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model_fit =</span> <span class="kw">map2</span>(fmla, data, lm),
+         <span class="co"># add column for model type</span>
+         <span class="dt">model_type =</span> <span class="kw">if_else</span>(predictor_var <span class="op">==</span><span class="st"> &quot;all_vars&quot;</span>, <span class="st">&quot;full&quot;</span>, <span class="st">&quot;slr&quot;</span>)) 
+
+<span class="co"># Model fit summaries/information</span>
+boston_models &lt;-<span class="st"> </span>boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod_glance  =</span> <span class="kw">map</span>(model_fit, glance),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map</span>(model_fit, tidy),
+         <span class="dt">add_tidy    =</span> <span class="kw">map</span>(model_fit, confint_tidy),
+         <span class="dt">mod_tidy    =</span> <span class="kw">map2</span>(mod_tidy, add_tidy, bind_cols),
+         <span class="dt">mod_augment =</span> <span class="kw">map2</span>(model_fit, data, augment)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>add_tidy)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify SLR models with significant slope/linear parameter (0.05)</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_type <span class="op">!=</span><span class="st"> &quot;full&quot;</span>, term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(term, estimate, p.value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(p.value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(p.value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">estimate</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">rad</td>
+<td align="center">0.6179109</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">0.0297423</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">lstat</td>
+<td align="center">0.5488048</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="center">nox</td>
+<td align="center">31.2485312</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">indus</td>
+<td align="center">0.5097763</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="center">medv</td>
+<td align="center">-0.3631599</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">black</td>
+<td align="center">-0.0362796</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="center">dis</td>
+<td align="center">-1.5509017</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">age</td>
+<td align="center">0.1077862</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="center">ptratio</td>
+<td align="center">1.1519828</td>
+<td align="center">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">rm</td>
+<td align="center">-2.6840512</td>
+<td align="center">6.0e-07</td>
+</tr>
+<tr class="even">
+<td align="center">zn</td>
+<td align="center">-0.0739350</td>
+<td align="center">5.5e-06</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot investigating linear rel. with crim</span>
+boston_dat <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>chas) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> predictor, <span class="dt">value =</span> value, <span class="op">-</span>crim) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> crim)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>predictor, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Ivestigating full model</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_type <span class="op">==</span><span class="st"> &quot;full&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>predictor_var, <span class="op">-</span>fmla, <span class="op">-</span>model_type) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">estimate</th>
+<th align="center">std.error</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+<th align="center">conf.low</th>
+<th align="center">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">(Intercept)</td>
+<td align="center">17.0332275</td>
+<td align="center">7.2349030</td>
+<td align="center">2.3543132</td>
+<td align="center">0.0189491</td>
+<td align="center">2.8181092</td>
+<td align="center">31.2483459</td>
+</tr>
+<tr class="even">
+<td align="center">zn</td>
+<td align="center">0.0448552</td>
+<td align="center">0.0187341</td>
+<td align="center">2.3943122</td>
+<td align="center">0.0170249</td>
+<td align="center">0.0080466</td>
+<td align="center">0.0816639</td>
+</tr>
+<tr class="odd">
+<td align="center">indus</td>
+<td align="center">-0.0638548</td>
+<td align="center">0.0834072</td>
+<td align="center">-0.7655789</td>
+<td align="center">0.4442940</td>
+<td align="center">-0.2277331</td>
+<td align="center">0.1000235</td>
+</tr>
+<tr class="even">
+<td align="center">chas</td>
+<td align="center">-0.7491336</td>
+<td align="center">1.1801468</td>
+<td align="center">-0.6347800</td>
+<td align="center">0.5258670</td>
+<td align="center">-3.0678829</td>
+<td align="center">1.5696156</td>
+</tr>
+<tr class="odd">
+<td align="center">nox</td>
+<td align="center">-10.3135349</td>
+<td align="center">5.2755363</td>
+<td align="center">-1.9549737</td>
+<td align="center">0.0511520</td>
+<td align="center">-20.6788947</td>
+<td align="center">0.0518249</td>
+</tr>
+<tr class="even">
+<td align="center">rm</td>
+<td align="center">0.4301305</td>
+<td align="center">0.6128303</td>
+<td align="center">0.7018754</td>
+<td align="center">0.4830888</td>
+<td align="center">-0.7739569</td>
+<td align="center">1.6342179</td>
+</tr>
+<tr class="odd">
+<td align="center">age</td>
+<td align="center">0.0014516</td>
+<td align="center">0.0179251</td>
+<td align="center">0.0809837</td>
+<td align="center">0.9354878</td>
+<td align="center">-0.0337676</td>
+<td align="center">0.0366709</td>
+</tr>
+<tr class="even">
+<td align="center">dis</td>
+<td align="center">-0.9871757</td>
+<td align="center">0.2818173</td>
+<td align="center">-3.5028930</td>
+<td align="center">0.0005022</td>
+<td align="center">-1.5408895</td>
+<td align="center">-0.4334619</td>
+</tr>
+<tr class="odd">
+<td align="center">rad</td>
+<td align="center">0.5882086</td>
+<td align="center">0.0880493</td>
+<td align="center">6.6804480</td>
+<td align="center">0.0000000</td>
+<td align="center">0.4152096</td>
+<td align="center">0.7612076</td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">-0.0037800</td>
+<td align="center">0.0051556</td>
+<td align="center">-0.7331884</td>
+<td align="center">0.4637927</td>
+<td align="center">-0.0139097</td>
+<td align="center">0.0063497</td>
+</tr>
+<tr class="odd">
+<td align="center">ptratio</td>
+<td align="center">-0.2710806</td>
+<td align="center">0.1864505</td>
+<td align="center">-1.4539010</td>
+<td align="center">0.1466113</td>
+<td align="center">-0.6374180</td>
+<td align="center">0.0952569</td>
+</tr>
+<tr class="even">
+<td align="center">black</td>
+<td align="center">-0.0075375</td>
+<td align="center">0.0036733</td>
+<td align="center">-2.0519589</td>
+<td align="center">0.0407023</td>
+<td align="center">-0.0147548</td>
+<td align="center">-0.0003202</td>
+</tr>
+<tr class="odd">
+<td align="center">lstat</td>
+<td align="center">0.1262114</td>
+<td align="center">0.0757248</td>
+<td align="center">1.6667104</td>
+<td align="center">0.0962084</td>
+<td align="center">-0.0225726</td>
+<td align="center">0.2749953</td>
+</tr>
+<tr class="even">
+<td align="center">medv</td>
+<td align="center">-0.1988868</td>
+<td align="center">0.0605160</td>
+<td align="center">-3.2865169</td>
+<td align="center">0.0010868</td>
+<td align="center">-0.3177885</td>
+<td align="center">-0.0799852</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify significant slope/linear parameters in full model (0.05)</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_type <span class="op">==</span><span class="st"> &quot;full&quot;</span>, term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(term, estimate, p.value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(p.value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(p.value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">estimate</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">rad</td>
+<td align="center">0.5882086</td>
+<td align="center">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="center">dis</td>
+<td align="center">-0.9871757</td>
+<td align="center">0.0005022</td>
+</tr>
+<tr class="odd">
+<td align="center">medv</td>
+<td align="center">-0.1988868</td>
+<td align="center">0.0010868</td>
+</tr>
+<tr class="even">
+<td align="center">zn</td>
+<td align="center">0.0448552</td>
+<td align="center">0.0170249</td>
+</tr>
+<tr class="odd">
+<td align="center">black</td>
+<td align="center">-0.0075375</td>
+<td align="center">0.0407023</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Scatterplot to compare SLR to Full estimates</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(model_type, term, estimate) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(model_type, estimate) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(full, slr)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Alternative to scatterplot</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(mod_tidy, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">!=</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(model_type, estimate)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_pointrange</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(. <span class="op">~</span><span class="st"> </span>term, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="kuyper-stat302_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setup formulas for cubic models </span>
+<span class="co"># --- REMOVE chas because you cannot fit a cubic to a binary var</span>
+predictor_var &lt;-<span class="st"> </span>boston_dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">names</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">c</span>(<span class="st">&quot;crim&quot;</span>, <span class="st">&quot;chas&quot;</span>))
+fmla &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;crim ~ poly(&quot;</span>, predictor_var, <span class="st">&quot;, 3)&quot;</span>)
+
+<span class="co"># Fit and store the cubic models</span>
+cubic_models &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">data =</span> <span class="kw">list</span>(boston_dat), 
+                        predictor_var, 
+                        fmla) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cubic_fit =</span> <span class="kw">map2</span>(fmla, data, lm)) </code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ANOVA test to determine if cubic/nonlinear significantly fits the data</span>
+<span class="co"># better than a simple linear regression (0.05)</span>
+boston_models <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(model_type <span class="op">!=</span><span class="st"> &quot;full&quot;</span>, predictor_var <span class="op">!=</span><span class="st"> &quot;chas&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(predictor_var, model_fit) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(cubic_models, <span class="dt">by =</span><span class="st">&quot;predictor_var&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">anova_test =</span> <span class="kw">map2</span>(model_fit, cubic_fit, anova)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>(anova_test, <span class="dt">.drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">term =</span> predictor_var, <span class="dt">p_value =</span> <span class="st">`</span><span class="dt">Pr(&gt;F)</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(term, p_value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(p_value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(p_value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">medv</td>
+<td align="center">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="center">dis</td>
+<td align="center">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="center">nox</td>
+<td align="center">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="center">indus</td>
+<td align="center">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="center">age</td>
+<td align="center">0.0000004</td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">0.0000114</td>
+</tr>
+<tr class="odd">
+<td align="center">ptratio</td>
+<td align="center">0.0002542</td>
+</tr>
+<tr class="even">
+<td align="center">rm</td>
+<td align="center">0.0052294</td>
+</tr>
+<tr class="odd">
+<td align="center">zn</td>
+<td align="center">0.0085120</td>
+</tr>
+<tr class="even">
+<td align="center">rad</td>
+<td align="center">0.0260783</td>
+</tr>
+<tr class="odd">
+<td align="center">lstat</td>
+<td align="center">0.0369832</td>
+</tr>
+</tbody>
+</table>
+<!--
+
+```r
+# Plotting cubic fits
+# Model fit summaries/information
+cubic_models <- cubic_models %>% 
+  mutate(data = map2(data,cubic_fit, add_predictions))
+  
+cubic_models %>% 
+  unnest(data, .drop = TRUE) %>%
+  
+  filter(predictor_var == "zn") 
+  
+cubic_plot_by <- function(data, obs_x, obs_y, pred_y, ...){
+  ggplot(data, aes(x = obs_x, y = obs_y)) +
+    geom_point() +
+    geom_line(aes(y = pred_y), color = "blue")  
+}  
+
+  gather(key = predictor, value = value, -crim) %>% 
+  ggplot(aes(x = value, y = crim)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    coord_cartesian(ylim = c(0, 25)) +
+    facet_wrap(. ~ predictor, scales = "free_x")
+```
+-->
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="stat-301-2-final-project.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lab-logistic-regression-lda-qda-and-knn.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "serif",
+"size": "2"
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["kuyper-stat302.pdf", "kuyper-stat302.epub"],
+"toc": {
+"collapse": "section"
+},
+"highlight": "tango"
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

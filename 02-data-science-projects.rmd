@@ -1,0 +1,62 @@
+<!-- # STAT 301-1 Final Project -->
+
+<!-- Aside from the labs, you will complete a final project to showcase your foundational analytical abilities and written storytelling skills about a dataset of your choosing. You will locate a dataset, clean and join it as necessary, conduct an exploratory data analysis, and compile a report on your findings. -->
+
+<!-- ## Milestones -->
+
+<!-- **Submission of data memo (circa midterm).** You will prepare a data memo, including but not limited to the following:  -->
+
+<!-- - Proposed project timeline. When do you expect to have your dataset loaded into R? When do you expect to start your analysis?  -->
+<!-- - Simple overview of the dataset. What does the dataset document? How do you plan to collect it? (Is it a simple download, a webscrape, etc? Provide a [formal citation][Citing/Documenting Data].) How big is the dataset? What kinds of variables will you be dealing with? Any missingness? Do you need to join two or more sources of data together? -->
+<!-- - The reason for your choice of dataset. Is it interesting to you? Challenging? Is this part of a larger research project? -->
+<!-- - Any difficulties you may encounter along the way. Is the data collection mechanism complicated? Is there significant missingness in the data? -->
+
+<!-- The memo should conform to the [style guide][Project Workflow and Style Guide] and should be completed in RMarkdown. *Neatness, organization, and reproducibility of your memo will have a significant influence on your grade!* -->
+
+<!-- **Progress check (couple of weeks after memo).** By now, it is expected you've started on the final report (data description and source, at least), and ideally, you've done some of the preliminary analysis. The instructors will be checking in with you individually to make sure things are going according to plan. -->
+
+<!-- **Final report and executive summary (end of quarter).** The final report includes a document written in RMarkdown, which fuses visuals, tables, and text in order to drive a narrative. Your analysis scripts and project file will be submitted alongside the final report. In addition, you will produce an executive summary (a 3 to 5 slide presentation) detailing the high points of your analysis -- think of it as driving the same narrative as your report, really fast. -->
+
+<!-- ## Submission -->
+
+<!-- Your final project will be submitted on Canvas. You should include your report (.Rmd + built .html or .pdf) and executive summary (.ppt/x or .pdf), your analysis script (.R), the R project file (.Rproj), and your raw data files as one compressed file (.zip preferred, but other formats are acceptable, e.g. .tar.gz). The instructors should be able to download your compressed file, dump the contents into a directory, open the project file, and run the script without errors. -->
+
+<!-- *Neatness, organization, and reproducibility of your project will have a significant influence on your grade!* -->
+
+# STAT 301-2 Final Project
+
+Aside from the labs, you will complete a final project to showcase your foundational analytical abilities and model-building skills on a dataset of your choosing. You will locate a dataset, clean and join it as necessary, conduct an exploratory data analysis, build models to answer research questions (can be predictive or inferential), and compile a report on your results.
+
+## Milestones
+
+**Submission of data memo (end of first 1/3 of course).** You will prepare a data memo, including but not limited to the following: 
+
+- Proposed project timeline. When do you expect to have your dataset loaded into R? When do you expect to start your analysis? 
+- Simple overview of the dataset. What does the dataset document? How do you plan to collect it? (Is it a simple download, a webscrape, etc? Provide a [formal citation][Citing/Documenting Data].) How big is the dataset? What kinds of variables will you be dealing with? Any missingness? Do you need to join two or more sources of data together?
+- Description of potential research questions. Are they predictive or inferential? Are these questions best answered by a classification or regression-based approach? What is the response variable? Which variables do you suspect will be useful in modeling the response?
+- Any difficulties you may encounter along the way. Is the data collection mechanism complicated? Is there significant missingness in the data?
+
+The memo should conform to the [style guide][Project Workflow and Style Guide] and should be completed in RMarkdown. *Neatness, organization, and reproducibility of your memo will have a significant influence on your grade!*
+
+**Report rough draft (nearing the end of the quarter).** Your report should be started well before finals week, when the final submission is due. The rough draft should be essentially complete by reading week, pending some graphics or final tabulated results. We make this stipulation for two reasons. First, you'll deliver a presentation during reading week on your work, which depends on having the work mostly done. Second, if anything unexpected arises, you can get help from the instructors well before the due date!
+
+Essential components of a complete final report include, but are not limited to:
+
+- Introduce your data and research question with a couple paragraphs
+- An exploratory data analysis that is either *motivated by* or *leads naturally* to your research question(s), including illustrative tables and graphics
+- Attempts to fit a couple different models and some notion of how each model performs, either using a validation set (okay) or cross-validation (preferred) -- make sure you use appropriate performance measures!
+- The performance of your best model on a performance set -- as before, make sure it is an appropriate performance measure! Is the performance satisfactory?
+- Debrief and next steps: what additional data resources would help improve the performance of your model? Which features of the model you selected make it the best (e.g. fits nonlinearity well)? Do any new research questions arise?
+- A smooth, descriptive narrative that binds all of the above into a readable report
+
+**Final report and executive summary presentation (end of quarter).** The final report should include the components above. Your analysis scripts and project file will be submitted alongside the final report. 
+
+In addition, you will produce an executive summary detailing the high points of your analysis -- think of it as driving the same narrative as your report, really fast. The summary should be composed of graphics, tables, and bullet points organized in a compelling manner.
+
+You will present your executive summary in small groups. Anticipate 8-10 minutes of presentation, and another 5 minutes for questions.
+
+## Submission
+
+Your final project will be submitted on Canvas. You should include your report (.Rmd + built .html or .pdf) and executive summary (.ppt/x or .pdf), your analysis script (.R), the R project file (.Rproj), and your raw data files as one compressed file (.zip preferred, but other formats are acceptable, e.g. .tar.gz). The instructors should be able to download your compressed file, dump the contents into a directory, open the project file in RStudio, and run the script without errors.
+
+*Neatness, organization, and reproducibility of your project will have a significant influence on your grade!*

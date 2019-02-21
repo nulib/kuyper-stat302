@@ -1,0 +1,75 @@
+# Project Workflow and Style Guide
+
+This chapter details the basic workflow that you should follow for data scicence projects in this course. These guidelines are designed to enable:
+
+* The creation of clear code and reports
+* Effective communication of ideas and results
+* Reproducibility
+
+You may find these guidelines helpful for projects outside of the classroom as well!
+
+## Directory Setup
+
+Basic organization starts with your directory setup. A logical directory structure should have a home folder dedicated to the course and files dedicated to each assignment within your home folder or a subfolder. A great way to facilitate clear organization and sharing of data science projects in R is through the use of R project files (.Rproj). By using R project files, your file directories are relative to your project folder. To learn more about R project files, see [Chapter 8](http://r4ds.had.co.nz/workflow-projects.html) of *R for Data Science*.
+
+## Files
+
+For most assignments you will be asked to provide three different file types:
+
+* An R script (.R)
+* An Rmarkdown file (.Rmd)
+* A compiled Rmarkdown report (.html)
+
+### R scripts
+
+R scripts should be provided to allow for quick reproducibility of your results. All code relevant to your analysis should be included and organized in a logical flow. Someone else should be able to take your R script and data and run it on their computer without making significant changes to it (provided it part of an R project). It should be well commented and organized according to the guidelines below.
+
+### Rmarkdown
+
+The Rmarkdown report provides a polished walkthrough of your code, as well as your answers to lab questions. Include your lab answers as plain text outside of embedded code (i.e., do not provide your answers as comments in code). It should be formatted using Rmarkdown syntax and organized using headers to separate lab sections and questions. Code should be broken up into chunks and included in the appropriate sections. If you will be writing mathematical expressions, you should invoke [LaTeX](https://en.wikipedia.org/wiki/LaTeX) math mode - surround your expressions with `$` to process them inline, or `$$` to center the output in a new line. For example: $$\int_{a}^{\infty} dx\,x^{m-2r} = - \frac{a^{m-2r+1}}{m-2r+1}$$ If you are new to LaTeX, [this website](https://www.codecogs.com/latex/eqneditor.php) can help you construct equations easily. See the section on Output below for further advice on how to write your Rmarkdown reports.
+
+## Code Guidelines
+
+### Comments
+
+Comments should be used to organize and clarify code to make it as accessible as possible. They should not include commentary or answers to lab questions (see Rmarkdown section above), but should describe what your code does and how it works.  To clarify code, comments should be used to explain intermediate steps in calculations, user-defined functions, functions from uncommon packages, and anything else that may be unclear from an initial read-through of your code. Comments can also be used to organize R scripts with headers and "lines" created with stretches of ### (not as necessary in Rmarkown since code chunks accomplish this).
+
+### Packages
+
+All libraries should be loaded at the beginning of an R script. Sometimes packages have functions with the same name, which can cause errors. In this case, the order in which the packages are loaded will impact your code. These conflicts can be avoided by specifying the package before calling the function or dataset of interest. For example, if both `dplyr` and `MASS` are loaded, you can specify that you wish to use `select()` from the `dplyr` packages like this: `dplyr::select()`.
+
+### Tidyverse
+
+The tidyverse is designed to facilitate fast and clear data science. The general rule in this course is to use tidyverse functions and principles when possible, and when it does not add significat complexity to your code. Tabular data should be read in as or converted to tibbles for most analyses, bearing in mind that some functions will require you to convert data into another format, such as lists or matrices. Use the pipe operator `%>%`, read as "then", to break up long chains of assignments and manipulations.
+
+### Naming Objects
+
+In this course, and in line with tidyverse principles, we will use snake case (e.g., `stock_means`, `cool_function()`). Make an effort to avoid vague or uninformative names such as `x`, `y`, `data1`, and `var`. Do not create objects with the same name as existing functions; for example, `c()` and `lm.fit()` are already functions in R, and should therefore not be used as names for other objects. To assign values to objects, use the arrow operator `<-`. Although using `=` to assign values to objects is valid R code, we will limit its use to define function arguments.
+
+### Spacing and Indentation
+
+Use one space on each side of an operator (e.g., `=`, `<-`, `+`) and one space after the comma in function arguments. For example: `mpg_mean <- mean(cars$mpg, na.rm = TRUE)`.
+
+Do not rely on RStudio or your text editor to wrap your code; instead break up long stretches of code with a new line at appropriate places, like after a comma in arguments. RStudio will automatically indent. You should indent when you are inside a function, inside a loop, when a stretch of code is being broken up, and after the first line when breaking up a stretch of code with `%>%` or `+`.
+
+## Output
+
+For most assignments, the output of interest will be statistics, small tables, and graphics. Keep in mind that presentation is an important element of the Rmarkdown reports. Therefore, do not print long vectors or tables in your report. The use of tibbles should help mitigate the inclusion of long tables, as only the first few rows are printed. If you wish to include a large table or list of values with your assignment, write it out as a .csv file using `write_csv()` and upload it with your script files. Small tables may be printed out, or you can consider the use of `kable()` from the `knitr` package, as well as the `kableExtra` package. See below for guidelines on graphics.
+
+### Graphics
+
+Graphics should be created with `ggplot()` when possible. All axes should be appropriately labeled and legends included when appropriate. Exercise good judgement. Do not include several, full-size graphics of a similar nature without faceting or grouping together. If you must plot several scatterplots, consider the use of `pairs()` or `ggpairs()` but ensure that the output is not too small to read.
+
+## Citing/Documenting Data
+
+Proper data management, documentation, and citation is critical for good data science. Be sure to properly cite a dataset just as you would any other academic resource. If your resource is dynamic (changes with time), be sure to keep a copy (if permissions allow) and record when you obtained it. Avoid manually editing your dataset (e.g., in a text editor or Excel). These changes are very difficult to trace and can lead to irreproducible analyses. If it is necessary to edit your dataset, create a script to do so where you can detail the changes made and why you made them.
+
+Northwestern University Library has recommended these sources for how to cite your data:
+
+* Digital Curation Center http://www.dcc.ac.uk/resources/how-guides/cite-datasets
+* Northwestern http://libguides.northwestern.edu/datamanagement/citingdata
+* IASSIST (APA, MLA, Chicago) https://www.icpsr.umich.edu/files/ICPSR/enewsletters/iassist.html
+
+### Sample Citation
+
+Studnitzer, Joshua, 2015, “Simplicity Versus WAR: Examining Salary Determinations in Major League Baseball’s Arbitration and Free Agent Markets”, https://doi.org/10.7910/DVN/28782, Harvard Dataverse, V3

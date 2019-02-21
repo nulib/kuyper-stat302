@@ -1,0 +1,11 @@
+---
+title: "Data Visualization"
+date: "`r format(Sys.time(), '%Y')`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This manual supports the Data visualization course from the Department of Statistics at Northwestern University."
+---
+# Preface {-} 

@@ -1,0 +1,11 @@
+book_filename: "kuyper-stat301"
+# repo: https://github.com/nulib/kuyper-stat301/
+delete_merged_file: true
+output_dir: "docs"
+clean: [packages.bib]
+language:
+  label:
+    fig: "FIGURE "
+    tab: "TABLE "
+  ui:
+    chapter_name: ""

@@ -1,0 +1,722 @@
+# Lab: Linear Regression
+
+This is a modified version of the **Lab: Linear Regression** section of chapter 3 from *Introduction to Statistical Learning with Application in R*. This version uses tidyverse techniques and methods that will allow for scalability and a more efficient data analytic pipeline.
+
+## Libraries
+
+The `library()` function is used to load libraries, or groups of functions and data sets that are not included in the base R distribution. Basic functions that perform least squares linear regression and other simple analyses come standard with the base distribution, but more exotic functions require additional libraries. Here we load the `MASS` package, which is a very large collection of data sets and functions. We also load the ISLR package, which includes the data sets associated with this book.
+
+```{r, message = FALSE}
+library(tidyverse)
+library(modelr)
+library(janitor)
+library(skimr)
+library(broom)
+library(corrplot)
+library(ggfortify)
+```
+
+If you receive an error message when loading any of these libraries, it likely indicates that the corresponding library has not yet been installed on your system. Some libraries, such as `MASS`, come with R and do not need to be separately installed on your computer. However, other packages, such as `ISLR`, must be downloaded the first time they are used. This can be done directly from within R. For example, on a Windows system, select the Install package option under the Packages tab. After you select any mirror site, a list of available packages will appear. Simply select the package you wish to install and R will automatically download the package. Alternatively, this can be done at the R command line via `install.packages("ISLR")`. This installation only needs to be done the first time you use a package. However, the `library()` function must be called each time you wish to use a given package.
+
+## Simple Linear Regression
+
+We will begin our exploration of linear regression with simple linear regression. As alluded to in the name, this is the simplest form of a linear model which occurs when we only have one predictor variable (i.e., an equation for a line). The general model equation is provided below. Note that there are to parameters ($\beta_0$, the intercept; $\beta_1$ the slope) to estimate.  
+
+$$Y = \beta_0 + \beta_1X$$
+
+Let's practice fitting a simple linear model to a dataset. We will be using the `Boston` dataset from the `MASS` library, which records `medv` (median house value) for 506 suburbs of Boston. Eventually we will want to predict median home value (`medv`) using the 13 other predictors in the dataset such as `rm` (average number of rooms per house), `age` (percentage homes built prior to 1940), and `lstat` (percent of households with low socioeconomic status). As always we should examine the codebook for the dataset which can be accessed using `?MASS::Boston` --- you may need to install `MASS` first.
+
+While we could access the data directly from `MASS` we will instead load it from a text file separated by `|` (Boston.txt) which has been provided. We do this to continue practicing the implementation of a coding structure that allows us to both scale and easily modify our workflow. Additionally it keeps us thinking about how best to prepare/process our data.
+
+```{r}
+# clean_names() is not really needed - column names are already snake_lower_case
+boston_dat <- read_delim("data/Boston.txt", delim = "|") %>% 
+  clean_names()
+```
+
+Let's get a quick overview of our data.
+
+```{r}
+boston_dat %>% 
+  skim() %>%
+  # Used to improve output display
+  kable() 
+```
+
+We see there is no missing data. That `medv` ranges from \$5,000 to \$50,000, which seems a little strange. Can you explain why we shouldn't be surprised by this range of values (see codebook)? Let's take a quick look at a correlogram to help us pick a single predictor for our simple linear model. 
+
+```{r}
+boston_dat %>% 
+  cor() %>% 
+  corrplot()
+```
+
+We see that `lstat` has a sizable correlation with `medv`. So let's use `lstat` as our predictor variable. We see from the table above that `lstat` ranges from 1.7% to 38%. Meaning we have a suburb were about 1 in every 50 households is considered to be low socioeconomic status and one suburb where about 20 in every 50 households are considered low.
+
+The model we want to fit is
+
+$$\mbox{mdev} = \beta_0 + \beta_1\mbox{lstat}$$
+
+We will be using the `lm()` function to fit our simple linear regression model. It is good practice to investigate the R documentation for an unfamiliar function (or even a familiar function) in order to understand what inputs are required, default settings/inputs, and what output will be produced (use `?lm`). The basic syntax is 
+`lm(formula = y ∼ x, data = dataset)` or `lm(y ∼ x, dataset)`, where `y ~ x` defines the formula for the model we wish to fit (`y` is the response, `x` is the predictor), and `dataset` contains these two variables. Read `~` as *predicted by* so we read `y ~ x` as *y predicted by x.* Some important notes (1) the `data` is the second argument --- **important for piping** ---  and (2) R automatically includes a constant term (i.e., the intercept). Let's fit our simple linear model.
+
+```{r}
+# Three ways to fit & store the model (2 with piping, 1 without piping)
+lm_fit <- boston_dat %>% lm(formula = medv ~ lstat)
+lm_fit <- boston_dat %>% lm(medv ~ lstat, data = .)
+lm_fit <- lm(medv ~ lstat , data = boston_dat)
+
+# What is stored
+lm_fit
+```
+
+`lm_fit` returns some basic information about the model is output, but more detailed information, we could use `summary(lm_fit)`. This gives us p-values and standard errors for the coefficients, as well as the R^2^ statistic and F-statistic for the model.
+
+```{r}
+lm_fit %>% 
+  summary()
+```
+
+Unfortunately this is not very tidy and incorporating `summary()` into a analytic pipeline can be difficult. Thankfully we have the `broom` package which provides three very helpful function (see [Introduction to broom](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)): 
+
+- `tidy()`: constructs a data frame that summarizes the model’s statistical findings. This includes coefficients and p-values for each term in a regression, per-cluster information in clustering applications, or per-test information for multtest functions.
+- `augment()`: add columns to the original data that was modeled. This includes predictions, residuals, and cluster assignments.
+- `glance()`: construct a concise one-row summary of the model. This typically contains values such as R^2^, adjusted R^2^, and residual standard error that are computed once for the entire model. 
+
+```{r}
+lm_fit %>% 
+  tidy() %>% 
+  clean_names()
+
+lm_fit %>% 
+  augment() %>% 
+  clean_names()
+
+lm_fit %>% 
+  glance() %>% 
+  clean_names()
+```
+
+These three function allow us to extract a vast amount of useful information from a linear model and store it as a tibble. This will allow us to smoothly integrate this information into an analytic pipeline/workflow. 
+
+In order to obtain a confidence interval for our model's parameters/coefficients, we can use `confint_tidy` instead of `confint()`.
+
+```{r}
+lm_fit %>% 
+  confint_tidy() %>% 
+  clean_names() 
+```
+
+By default it constructs 95% confidence intervals for each parameter in our model. Unfortunately it does not include an information detailing which interval belongs to which parameter. Be default it goes in order of inclusion into the model and the intercept is always first. This is intentional because in most cases this information is combined with information from `tidy()` which does include such information.
+
+```{r}
+lm_fit %>% 
+  tidy() %>% 
+  bind_cols(lm_fit %>% confint_tidy()) %>% 
+  clean_names()
+```
+
+The `predict()` function can be used to produce confidence intervals and prediction intervals for the prediction of `medv` for a given value of `lstat` --- `predict()` does not have a tidy analog.
+
+```{r}
+new_data <- tibble(lstat = c(5, 10, 15))
+
+new_data %>% 
+  predict(lm_fit, newdata = ., interval = "confidence") %>% 
+  as_tibble()
+
+new_data %>% 
+  predict(lm_fit, newdata = ., interval = "prediction") %>% 
+  as_tibble()
+```
+
+For instance, the 95% confidence interval associated with a `lstat` value of 10 is (24.47, 25.63), and the 95% prediction interval is (12.828, 37.28). As expected, the confidence and prediction intervals are centered around the same point (a predicted value of 25.05 for `medv` when `lstat` equals 10), but the prediction interval is much wider. Why is that the case? The confidence interval is a range of plausible values for the **expected/average response value**. The prediction interval provides a plausible range of values for the response.
+
+### Plots for Assessing Linear Models
+
+Graphical techniques are essential tools for assessing and communicating models. We will attempt to use `ggplot2` techniques whenever possible, but there are built-in diagnostic plots in base R which are useful and will get the job done. Our preference for `ggplot2` is due to it being a core tidyverse package --- makes building workflows/pipelines easier --- and we can quickly and efficiently build highly customizable graphics. 
+
+We will need to have a dataset that contains both the original data and the additional variables from a fitted model. That is exactly what `augment()` does. Check out `?augment.lm` for details.
+
+```{r}
+boston_augmented <- boston_dat %>% 
+  augment(lm_fit, data = .) %>% 
+  clean_names()
+```
+
+Before fitting a linear model it would be wise to check that the relationship between the response and predictor(s) is linear. While it might seem obvious to do, it is a step that is unfortunately ignored more often than you would think. In fact, we skipped this step above and just went directly to fitting a linear model.
+
+We present two ways to construct this plot. One is more general and will be useful when fitting more advanced or non-standard models.
+
+```{r, message = FALSE}
+# General plot
+boston_augmented %>% 
+  ggplot(aes(x = lstat, y = medv)) +
+    geom_point() +
+    geom_line(aes(y = fitted), color = "blue", size = 1)
+
+# geom_smooth() depends on defined method
+boston_augmented %>% 
+  ggplot(aes(x = lstat, y = medv)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    # Added loess smooth for comparison
+    geom_smooth(se = FALSE, color = "red", linetype = "dashed")
+```
+
+Clearly the relationship is not linear. Maybe a polynomial fit would be better, say a quadratic which we will explore later. 
+
+Next we will move on to a series of model diagnostic plots. This (tidyverse reference page)[https://ggplot2.tidyverse.org/reference/fortify.lm.html] provides an example of how to take the base R diagnostic plots and construct `ggplot2` analogs --- note that they use `fortify()` instead of `augment()`. 
+
+```{r, message = FALSE}
+boston_augmented %>% 
+  ggplot(aes(x = fitted, y =  resid)) +
+    geom_point() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_smooth(color = "red", se = FALSE)
+
+boston_augmented %>% 
+  ggplot(aes(x = fitted, y =  std_resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(color = "red", se = FALSE)
+
+boston_augmented %>% 
+  ggplot() +
+  stat_qq(aes(sample = std_resid)) +
+  geom_abline()
+
+boston_augmented %>% 
+  ggplot(aes(x = fitted, y = sqrt(abs(std_resid)))) +
+    geom_point() +
+    geom_smooth(color = "red", se = FALSE)
+
+boston_augmented %>% 
+  arrange(hat) %>% 
+  ggplot(aes(seq_along(cooksd), cooksd)) +
+  geom_col()
+
+boston_augmented %>% 
+  ggplot(aes(hat, std_resid)) +
+  geom_vline(size = 2, colour = "white", xintercept = 0) +
+  geom_hline(size = 2, colour = "white", yintercept = 0) +
+  geom_point() + 
+  geom_smooth(color = "red", se = FALSE)
+
+boston_augmented %>% 
+  ggplot(aes(hat, std_resid)) +
+  geom_vline(size = 2, colour = "white", xintercept = 0) +
+  geom_hline(size = 2, colour = "white", yintercept = 0) +
+  geom_point(aes(size = cooksd)) + 
+  geom_smooth(color = "red", se = FALSE)
+```
+
+<!-- Add comments about plots and their utility -->
+
+It is often useful to investigate or identify observations that are high leverage and or are influential. The `hat` values (leverage statistics) are used to identify high leverage observations --- larger values indicate higher leverage. Cook's distance (`cooksd`) are used to identify influential observations --- larger values indicate higher influence. Now that we know which measures to use we can simply use `arrange()` and `filter()` to extract the observations of interest. Using `filter()` requires a cut off value (i.e. keep all observations larger than a value) which is a little problematic. We are only looking for the observations with the largest values, `top_n()` from `dplyr` to the rescue --- see `?top_n` for details.
+
+```{r}
+# 5 observations with highest leverage
+boston_augmented %>%
+  top_n(5, hat) %>% 
+  arrange(desc(hat)) %>% 
+  select(hat, medv, lstat, everything())
+
+# 5 observations with highest cook's d
+boston_augmented %>%
+  top_n(5, cooksd) %>% 
+  arrange(desc(cooksd)) %>% 
+  select(cooksd, medv, lstat, everything())
+```
+
+Unfortunately the dataset does not supply the name/unique identifier for the Boston suburbs it contains. A unique identifier becomes useful when comparing lists like those above. We could have added a unique identifier using `row_number()` at many different points to assist with this. Could have done this when creating `boston_augmented`. Consider going back and doing this within your code in order to help you identify if there are both suburbs on both the high leverage and high influential lists above.
+
+**Sidebar**
+
+Base R is fairly adept at creating quick diagnostic plots for linear models, which is useful when working on a one-off project or for quick exploration. `plot()` will automatically produce four diagnostic plots for a `lm()` object. In general, this command will produce one plot at a time, and hitting **Enter** will generate the next plot. However, it is often convenient to view all four plots together. We can achieve this by using the `par()` function, which tells R to split the display screen into separate panels so that multiple plots can be viewed simultaneously. For example, `par(mfrow = c(2, 2))` divides the plotting region into a 2×2 grid of panels. 
+
+```{r}
+par(mfrow = c(2,2)) 
+plot(lm_fit)
+```
+
+There is a ggplot version of the diagnostic plots produced using `plot(lm_fit)`. It requires the packages `ggfortify` and has been unstable in the past.
+
+```{r}
+lm_fit %>% 
+  autoplot()
+```
+
+## Fitting Many Models
+
+At the core of statistical/machine learning is the idea of fitting many models or slight variations of a model type for comparison. Conducting this process in an effective, efficient, and organized manner is extremely important. While the previous section provided an introduction on how to fit a simple linear model and how to examine it, this section will focus on how to incorporate these processes into a workflow that allows for the fitting and assessment of many candidate models. The `map` functions and `nest()`/`unnest()` from `purrr` will be essential. 
+
+Our desire to fit many models naturally leads to multiple linear regression --- multiple predictor. The syntax to do this in R is intuitive, for the most part. We just add the the desired variable to the formula definition. For instance, suppose we wanted to fit a linear model that uses a suburb's `age` (percentage homes built prior to 1940) and `lstat` (percent of households with low socioeconomic status) to predict its `medv` (median home value). We would use `medv ~ lstat + age` for our R formula. Note that you should read the `+` as *and*. Now read the R formula as *`medv` is predicted by `lstat` and `age`*. Note that `+` is not a mathematical operator in this instance.
+
+The following is a list of seven candidate models we would like to fit. These models were selected to demonstrate important features of the R formula syntax. 
+
+1. Simple linear regression using `lstat`
+    - `medv ~ lstat`
+2. Polynomial fit (quadratic in `lstat`)
+    - `medv ~ lstat + I(lstat^2)` or `medv ~ poly(medv, 2)`
+    - If you need to do a calculation involving a variable such as squaring or re-centering it, then you will need to wrap it in `I()`. Alternatively you could create the variable and add to your dataset. 
+3. Use only `lstat` and `age` as predictors
+    - `medv ~ lstat + age`
+4. Allow for interaction between `lstat` and `age`
+    - `medv ~ lstat + age + lstat:age` or `medv ~ lstat*age`
+    - Note the using  ensures that the main effects of the two variables are included. Using `var_one:var_two` only includes the interaction term which can be useful. 
+5. Full model or kitchen sink model (all available variables as predictors)
+    - `medv ~ .`, 
+    - Notice that we do not have to list all variables.
+6. Everything except for `age`
+    - `medv ~ . - age`
+    - We should `-` read as *do not inclue* or *remove*.
+7. All pair-wise interactions (including main effects)
+   - `medv ~ .*.`
+   
+We begin by creating a tibble/dataset/database with a list-column variable named `data` and then immediately proceed to fit our models. The list-column structure is necessary for the mapping functions. We will want to do this in one pipeline, but it is instructive to take a peak at the initial step which can be accomplished using either `nest()` or `tibble()`.  
+
+```{r}
+# Option 1
+boston_dat %>% nest()
+# Option 2
+tibble(data = list(boston_dat))
+```
+
+The list-column structure may seem strange here since we only have one dataset, but imagine if we had the same Boston dataset updated annually. Then we could place each year's data within the `data` list-column. This would be particularly useful because we could seamlessly fit each of the seven models to each year of data --- this might not be clear now, but it will be as you become familiar with the mapping functions.
+
+We store the data and the corresponding models in `boston_models`. We made the choice to use model names that are uninformative (`mod_01`, ..., `mod_07`) because it would be difficult to come up with a naming scheme that would be both useful and not overly cumbersome. 
+
+```{r}
+boston_models <- boston_dat %>% 
+  nest() %>% 
+  mutate(mod_01 = map(data, lm, formula = medv ~ lstat),
+         mod_02 = map(data, lm, formula = medv ~ poly(lstat, 2)),
+         mod_03 = map(data, lm, formula = medv ~ lstat + age),
+         mod_04 = map(data, lm, formula = medv ~ lstat*age),
+         mod_05 = map(data, lm, formula = medv ~ .),
+         mod_06 = map(data, lm, formula = medv ~ . - age),
+         mod_07 = map(data, lm, formula = medv ~ .*.))
+
+boston_models
+```
+
+It should be clear that `boston_models` is not in a tidy format. The models are spread over several columns so we will need to gather them up.
+
+```{r}
+boston_models <- boston_models %>% 
+  gather(key = model_name, value = model_fit, -data)
+
+boston_models
+```
+
+Now we have a tidy database containing our fitted models and its corresponding data. We could save `boston_models` --- `save_rds()` --- for later usage. This is especially useful when model fitting is time consuming. 
+
+### Assessing Many Models
+
+Let's assess how each model fit the data before digging into the particulars of each model. The `glance()` functions returns many model assessment measures and can seamlessly applied to each model fit using `map()`. The trick is accessing the the information once it is added to the `boston_models` and recognizing it is added as list-column. The `unnest()` function is how we unpack the information contained in a list-column --- see `?unnest()` for details.  
+
+```{r}
+# Assessing models with AIC
+boston_models %>% 
+  mutate(mod_glance = map(model_fit, glance)) %>% 
+  # .drop = TRUE: drops all other list-columns (get rid of cluter)
+  unnest(mod_glance, .drop = TRUE) %>% 
+  arrange(AIC) %>% 
+  select(model_name, AIC, everything())
+```
+
+We can use a visualization to inspect the models on several assessment measures. We have included a few other model assessment measures from the `modelr` package --- see `?mae` for details on each. This also provides an opportunity to demonstrate the use of a `map2` function. Note that the `_dbl` on these function is made necessary by the `.drop = TRUE` argument in `unnest()`.  
+
+```{r}
+boston_models %>% 
+  mutate(mod_glance = map(model_fit, glance),
+         mae  = map2_dbl(model_fit, data, mae),
+         rmse = map2_dbl(model_fit, data, rmse),
+         mape = map2_dbl(model_fit, data, mape)) %>% 
+  unnest(mod_glance, .drop = TRUE) %>% 
+  select(model_name, r.squared, adj.r.squared, AIC, BIC, deviance, 
+         sigma, rmse, mae, mape) %>% 
+  gather(key = measure, value = value, -model_name) %>% 
+  ggplot(aes(value, model_name)) +
+    geom_point() +
+    facet_wrap(. ~ measure, scales = "free_x")
+```
+
+We can quickly compare models using any of these assessment measures. The story is pretty much the same across the measures. Not surprisingly, the more flexible models (`mod_05`, `mod_06`, & `mod_07`) do a much better job of fitting the data than the less flexible models. We also see that `mod_02` is a vast improvement over `mod_01`. Why might that be? Should we be using this to determine which model might preform best on Boston suburb from 2018? No, we are using the same data to assess the model that we used to train/build it. We can use these assessment measures to determine which models fit this particular dataset the best and to develop some insight into the type of model we should consider using for future dataset. 
+
+It will be useful to store the model related information from `glance()`, `tidy()`, `confidnt_tidy()`, and `augment()` within our model database. This is seamlessly achieved by using the `map()` function. We also used a `map2()` function to ensure the augment output was consistent across models and bind the output from `tidy()` and `confint_tidy()` together.  
+
+```{r}
+boston_models <- boston_models %>% 
+  mutate(mod_glance  = map(model_fit, glance),
+         mod_tidy    = map(model_fit, tidy),
+         add_tidy    = map(model_fit, confint_tidy),
+         mod_tidy    = map2(mod_tidy, add_tidy, bind_cols),
+         mod_augment = map2(model_fit, data, augment)) %>%
+  select(-add_tidy)
+```
+
+Now we have a tidy database containing our fitted models, its corresponding data, and assorted information concerning these models. Again this would be useful to save `boston_models` --- `save_rds()` --- for later usage. 
+
+Let's build a graphic to compare the estimated coefficients for a few predictor variables across the models. One way to do this is to plot the 95% confidence intervals per model for the variables of interest. We can achieve this by
+
+- extracting the tidy information from `boston_models`,
+- keep only the terms we would like to examine, and
+- build the plot.
+
+```{r}
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(term %in% c("lstat", "age")) %>% 
+  ggplot(aes(model_name, estimate)) +
+    geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+    facet_wrap(. ~ term, scales = "free_x") +
+    coord_flip()
+```
+
+Notice that `mod_02`, the polynomial fit, does not appear in these plots. This is actually a good thing because we want terms from each model to actually be comparable. The polynomial fit, `mod_02`, does estimate a coefficient for `poly(lstat, 2)1` (the linear term), but it is not compatible to the other model's estimates because `poly()` uses an orthogonalization fitting method --- see `poly()` for details. We could address this by setting `raw = TRUE` in our pipeline's `poly()` call, but we will leave that for you to attempt. Still it would be nice to see how the polynomial fit compares to the simple linear model we began with. Let's plot the fitted models (`mod_01` & `mod_02`) and we will see that the polynomial model appears to fit the data better which is not surprising given the model assessment measures we have above.
+
+```{r}
+boston_models %>% 
+  filter(model_name %in% c("mod_01", "mod_02")) %>% 
+  unnest(mod_augment) %>% 
+  ggplot(aes(x = lstat, y = medv)) +
+    geom_point() +
+    geom_line(aes(y = .fitted, color = model_name), size = 1)
+```
+
+### Examing One or Fewer Models
+
+The structure of `boston_models` allows for a workflow/pipeline that is extremely useful for exploring, assessing, and comparing many models. We avoid having many unnecessary intermediate objects to keep track of and we can quickly adjust our pipeline with any corrections or additions. 
+
+What if we want to focus on one of the models contained in `boston_models`? One-off investigations or explorations can be useful as a check on your coding, for gaining insight into the data, or developing ideas for more models to fit. It would be nice to be able to quickly extract the desired information which in most instances can be done using some combination of `filter()`, `select()`, and `unnest()`, or R's accessor syntax (e.g. `$`, `[[]]`, `[]`). Luckily `purrr` provides `pluck()`.
+
+`pluck()` is particularly useful for extracting elements from a list-column that are not in a tibble format with the same dimensions. Such as the `model_fit` list-column in `boston_models`. Suppose we want to quickly extract the fit for `mod_02` and examine it. 
+
+```{r}
+# Quick diagnostic plots
+boston_models %>% 
+  pluck("model_fit", 1) %>%
+  # use plot() if autoplot() doesn't work
+  autoplot() 
+```
+
+Unlike the diagnostic plots for `mod_01` there is no discernible pattern in the residuals. 
+
+We could also use analysis of variance (ANOVA) to examine this model and statistically compare it to `mod_01`. Note that `mod_01` is a linear submodel `mod_02`. This is because the only difference between these models is the quadratic term in `mod_02` (`lstat`^2^). If we set the coefficient on the quadratic term to 0 then `mod_02` would reduce to `mod_01` which is why `mod_01` is a submodel of `mod_02`.  We can use the `anova()` function to perform a hypothesis test comparing the two models (provided one is a submodel). The null hypothesis is that the two models fit the data equally well, and the alternative hypothesis is that the full model (not the submodel) is superior. To do this without `pluck()` can be a pain.
+
+```{r}
+# # Without pluck()
+# boston_models %>%
+#   filter(model_name %in% c("mod_01", "mod_02")) %>%
+#   select(model_name, model_fit) %>%
+#   spread(key = model_name, value = model_fit) %>% 
+#   transmute(test = map2(mod_01, mod_02, anova)) %>% 
+#   unnest()
+
+anova(boston_models %>% pluck("model_fit", 1),
+      boston_models %>% pluck("model_fit", 2))
+```
+
+Here the F-statistic is 135 and the associated p-value is virtually zero. This provides very clear evidence that the model containing the predictors `lstat` and `lstat`^2^ is far superior to the model that only contains the predictor `lstat`. This is not surprising, since earlier we saw evidence for non-linearity in the relationship between `medv` and `lstat`.
+
+Maybe we want to examine the variance inflation factors for the full model, `mod_05`. The `vif()` function, part of the `car` package, can be used to compute variance inflation factors. We've added a few more steps to the pipeline to provide a useful presentation of the output. You may need to install the `car` package.
+
+```{r}
+boston_models %>% 
+  pluck("model_fit", 5) %>% 
+  car::vif() %>% 
+  # Quick way to turn a named vector to a tibble
+  enframe() %>% 
+  arrange(desc(value))
+```
+
+## Qualitative Predictors
+
+We will attempt to predict car seat `sales` for 400 locations using a number of predictors --- both quantitative and qualitative. The data is contained in the provided Carseats.csv file. It is also part of the `ISLR` package so it would be wise to inspect its codebook --- `?ISLR::Carseats`. Remember that instead of loading the data from `ISLR` we read it in from the provided file in order to continue practicing a coding structure that allows us to both scale and easily modify our workflow and it will keep us thinking about what steps are necessary to prepare/process our data. 
+
+We provide two options for reading in the data. The first is useful when we want to re-type all character variables to factors and don't have a preference for the order of the levels, which can be helpful for datasets with a large number of variables. In the second option we manually type the factor variables and decide on the ordering. We could use a hybrid of the options to quickly re-type variables and then follow it by re-leveling the factors we want re-leveled --- use `fct_relevel()`.
+
+```{r}
+# Option 1
+carseats_dat <- read_csv("data/Carseats.csv") %>% 
+  clean_names() %>% 
+  mutate_if(is.character, as.factor)
+
+# Option 2
+carseats_dat <- read_csv("data/Carseats.csv") %>%
+  clean_names() %>% 
+  mutate(shelve_loc = factor(shelve_loc, levels = c("Bad", "Medium", "Good")),
+         urban      = factor(urban, levels = c("No", "Yes")),
+         us         = factor(urban, levels = c("No", "Yes")))
+
+# Hybrid 
+carseats_dat <- read_csv("data/Carseats.csv") %>% 
+  clean_names() %>% 
+  mutate_if(is.character, as.factor) %>% 
+  mutate(shelve_loc = fct_relevel(shelve_loc, "Bad", "Medium"))
+```
+
+Let's take a quick look at the data.
+
+```{r}
+carseats_dat %>% 
+  skim() %>% 
+  kable()
+```
+
+The `Carseats` data includes qualitative predictors such as `shelve_loc`, an indicator of the quality of the shelving location --- that is, the space within a store in which the car seat is displayed --- at each location. The predictor `shelv_loc` takes on three possible values, `Bad`, `Medium`, and `Good`. 
+
+Given a qualitative variable such as `shelve_loc`, R generates dummy variables automatically. Below we fit two simple linear regressions using `shelve_loc` where the only difference being that one includes an intercept term (`mod_01`) and the other does not (`mod_02`). We also fit a couple of multiple regression models.
+
+```{r}
+# Organize fitted models
+carseats_models <- carseats_dat %>% 
+  nest() %>% 
+  mutate(mod_01 = map(data, lm, formula = sales ~ shelve_loc),
+         mod_02 = map(data, lm, formula = sales ~ shelve_loc - 1),
+         mod_03 = map(data, lm, formula = sales ~ .),
+         mod_04 = map(data, lm, formula = sales ~ . + income:advertising + price:age)) %>% 
+  gather(key = model_name, value = model_fit, -data)
+
+# Model fit information 
+carseats_models <- carseats_models %>% 
+  mutate(mod_glance  = map(model_fit, glance),
+         mod_tidy    = map(model_fit, tidy),
+         add_tidy    = map(model_fit, confint_tidy),
+         mod_tidy    = map2(mod_tidy, add_tidy, bind_cols),
+         mod_augment = map2(model_fit, data, augment)) %>%
+  select(-add_tidy)
+```
+
+Let's begin by looking over the estimates produced by the first two models. Since there is no intercept in `mod_02` the estimated coefficients are equal to the mean sales for each of our three shelve location categories. We see that the estimated intercept for `mod_01` is the same as the estimate for `shelve_locBad` in the `mod_02`. Since `Bad` is the reference group in `mod_01` the intercept for the model is equal to the mean sales for that group. The other coefficients in `mod_01` provide the difference between the indicated category and the model's reference group. Therefore, if we add the estimate for `Good` to the intercept in `mod_01` we will get the mean sales for the `Good` shelve location category. Which is directly provided in `mod_02`. 
+
+```{r}
+carseats_models %>% 
+  filter(model_name %in% c("mod_01", "mod_02")) %>% 
+  unnest(mod_tidy) %>% 
+  kable()
+```
+
+Is there really a difference between `mod_01` and `mod_02`? No, there is no difference other than how the information is encoded and extracted from the model. We just need to do a little adding or subtracting to move from one coefficient/parameter estimate to the other. What is important to realize here is that even though the terms share a name (or common symbol) they do not always estimate the same quantity. 
+
+Let's move on and check if `mod_04` fits the data better than `mod_03`. The only difference between these models is a few interactions terms. 
+
+```{r}
+anova(carseats_models %>% pluck("model_fit", 3),
+      carseats_models %>% pluck("model_fit", 4))
+```
+
+Yes, `mod_04` does provide significantly better fit to the data. Let's take a quick look at this model.
+
+```{r}
+carseats_models %>% 
+  pluck("mod_tidy", 4)
+```
+
+## Modified Workflow
+
+The general work flow is the same, but maybe we are provided with a list of formulas or more likely it is more efficient for us to create a list of formulas. For instance, suppose we want to fit all possible simple linear regression for predicting `medv` in the `boston_dat` dataset. Creating this list of formulas is much easier than having to code each individual formula. The workflow also has the benefit of being able to seamlessly incorporate any additional variables that might be added to the Boston dataset.
+
+```{r}
+# Setup formulas
+predictor_var <- boston_dat %>% names() %>% setdiff("medv")
+fmla <- paste("medv ~", predictor_var)
+
+# Fit and store the models
+boston_models <- tibble(data = list(boston_dat), 
+                        model_name = c(predictor_var, "full") , 
+                        fmla = c(fmla, "medv ~ .")) %>% 
+  mutate(model_fit = map2(fmla, data, lm)) 
+
+# Model fit summaries/information
+boston_models <- boston_models %>% 
+  mutate(mod_glance  = map(model_fit, glance),
+         mod_tidy    = map(model_fit, tidy),
+         add_tidy    = map(model_fit, confint_tidy),
+         mod_tidy    = map2(mod_tidy, add_tidy, bind_cols),
+         mod_augment = map2(model_fit, data, augment)) %>%
+  select(-add_tidy)
+
+# Scatterplot to compare SLR to Full estimates
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(term != "(Intercept)") %>% 
+  mutate(model_type = if_else(model_name != "full", "slr", "full")) %>% 
+  select(model_type, term, estimate) %>% 
+  spread(model_type, estimate) %>% 
+  ggplot(aes(full, slr)) +
+    geom_point() +
+    geom_abline(color = "blue", linetype = "dashed") 
+
+# Alternative to scatterplot
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(term != "(Intercept)") %>% 
+  mutate(model_type = if_else(model_name != "full", "slr", "full")) %>% 
+  ggplot(aes(model_type, estimate)) +
+    geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    facet_wrap(. ~ term, scales = "free_x") +
+    coord_flip()
+```
+
+### Exercise 15 (Section 3.7 - pg 126)
+
+Let's use this modified workflow to work through Exercise 15 from Section 3.7 of *Introduction to Statistical Learning*. Again it is important not to just copy and paste a workflow. You need to think about the process and what might be motivating the data structure we are building. This can only be achieved by reading through the question in its entirety and sketching our a plan of action that will allow us to answer the question. It is also useful to think beyond the questions being asked directly and anticipate indirect questions of explorations that may arise (one reason for using a flexible pipeline). 
+
+Also, realize the resulting code that you see below is a cleaned up version of the process. You don't see the iterative process by which we encounter issues and accordingly adjust the pipeline. Putting in the time to justify every line of code will help you understand pipeline development and analysis process.  
+
+```{r}
+# Setup formulas for simple linear regressions =
+predictor_var <- boston_dat %>% names() %>% setdiff("crim")
+fmla <- paste("crim ~", predictor_var)
+
+# adding full model
+predictor_var <- c(predictor_var, "all_vars")
+fmla <- c(fmla, "crim ~ .")
+
+# Fit and store the models
+boston_models <- tibble(data = list(boston_dat), 
+                        predictor_var, 
+                        fmla) %>% 
+  mutate(model_fit = map2(fmla, data, lm),
+         # add column for model type
+         model_type = if_else(predictor_var == "all_vars", "full", "slr")) 
+
+# Model fit summaries/information
+boston_models <- boston_models %>% 
+  mutate(mod_glance  = map(model_fit, glance),
+         mod_tidy    = map(model_fit, tidy),
+         add_tidy    = map(model_fit, confint_tidy),
+         mod_tidy    = map2(mod_tidy, add_tidy, bind_cols),
+         mod_augment = map2(model_fit, data, augment)) %>%
+  select(-add_tidy)
+```
+
+```{r slr_sig}
+# Identify SLR models with significant slope/linear parameter (0.05)
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(model_type != "full", term != "(Intercept)") %>% 
+  select(term, estimate, p.value) %>% 
+  arrange(p.value) %>% 
+  filter(p.value < 0.05) %>% 
+  kable()
+```
+
+
+```{r}
+# Plot investigating linear rel. with crim
+boston_dat %>% 
+  select(-chas) %>% 
+  gather(key = predictor, value = value, -crim) %>% 
+  ggplot(aes(x = value, y = crim)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    coord_cartesian(ylim = c(0, 25)) +
+    facet_wrap(. ~ predictor, scales = "free_x")
+```
+
+
+```{r}
+# Ivestigating full model
+boston_models %>% 
+  filter(model_type == "full") %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  select(-predictor_var, -fmla, -model_type) %>% 
+  kable()
+
+# Identify significant slope/linear parameters in full model (0.05)
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(model_type == "full", term != "(Intercept)") %>% 
+  select(term, estimate, p.value) %>% 
+  arrange(p.value) %>% 
+  filter(p.value < 0.05) %>% 
+  kable()
+```
+
+```{r}
+# Scatterplot to compare SLR to Full estimates
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>%
+  filter(term != "(Intercept)") %>% 
+  select(model_type, term, estimate) %>% 
+  spread(model_type, estimate) %>% 
+  ggplot(aes(full, slr)) +
+    geom_point() +
+    geom_abline(color = "blue", linetype = "dashed")
+```
+
+```{r}
+# Alternative to scatterplot
+boston_models %>% 
+  unnest(mod_tidy, .drop = TRUE) %>% 
+  filter(term != "(Intercept)") %>% 
+  ggplot(aes(model_type, estimate)) +
+    geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    facet_wrap(. ~ term, scales = "free_x") +
+    coord_flip()
+```
+
+```{r}
+# Setup formulas for cubic models 
+# --- REMOVE chas because you cannot fit a cubic to a binary var
+predictor_var <- boston_dat %>% names() %>% setdiff(c("crim", "chas"))
+fmla <- paste0("crim ~ poly(", predictor_var, ", 3)")
+
+# Fit and store the cubic models
+cubic_models <- tibble(data = list(boston_dat), 
+                        predictor_var, 
+                        fmla) %>% 
+  mutate(cubic_fit = map2(fmla, data, lm)) 
+```
+
+```{r}
+# ANOVA test to determine if cubic/nonlinear significantly fits the data
+# better than a simple linear regression (0.05)
+boston_models %>% 
+  filter(model_type != "full", predictor_var != "chas") %>% 
+  select(predictor_var, model_fit) %>% 
+  left_join(cubic_models, by ="predictor_var") %>% 
+  mutate(anova_test = map2(model_fit, cubic_fit, anova)) %>% 
+  unnest(anova_test, .drop = TRUE) %>% 
+  drop_na() %>% 
+  rename(term = predictor_var, p_value = `Pr(>F)`) %>% 
+  select(term, p_value) %>% 
+  filter(p_value < 0.05) %>% 
+  arrange(p_value) %>% 
+  kable()
+```
+
+<!--
+```{r, eval = FALSE}
+# Plotting cubic fits
+# Model fit summaries/information
+cubic_models <- cubic_models %>% 
+  mutate(data = map2(data,cubic_fit, add_predictions))
+  
+cubic_models %>% 
+  unnest(data, .drop = TRUE) %>%
+  
+  filter(predictor_var == "zn") 
+  
+cubic_plot_by <- function(data, obs_x, obs_y, pred_y, ...){
+  ggplot(data, aes(x = obs_x, y = obs_y)) +
+    geom_point() +
+    geom_line(aes(y = pred_y), color = "blue")  
+}  
+
+  gather(key = predictor, value = value, -crim) %>% 
+  ggplot(aes(x = value, y = crim)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    coord_cartesian(ylim = c(0, 25)) +
+    facet_wrap(. ~ predictor, scales = "free_x")
+
+```
+-->
+

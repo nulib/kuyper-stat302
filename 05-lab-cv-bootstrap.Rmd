@@ -1,0 +1,263 @@
+# Lab: Cross-Validation and the Bootstrap
+
+This is a modified version of the **Lab: Cross-Validation and the Bootstrap** section of chapter 5 from *Introduction to Statistical Learning with Application in R*. This version uses tidyverse techniques and methods that will allow for scalability and a more efficient data analytic pipeline.
+
+We will need the packages loaded below.
+
+```{r, message = FALSE}
+# Load packages
+library(tidyverse)
+library(modelr)
+library(janitor)
+library(skimr)
+```
+
+Whenever performing analyses or processes that include randomization or resampling it is considered best practice to set the seed of your software's random number generator. This is done in R using `set.seed()`. This ensure the analyses and procedures being performed are reproducible. For instance, readers following along in the lab will be able to produce the precisely the same results as those produced in the lab. Provided they run all code in the lab in sequence from start to finish --- cannot run code chucks out of order. Setting the seed should occur towards the top of an analytic script, say directly after loading necessary packages.
+
+```{r}
+# Set seed 
+set.seed(27182) # Used digits from e
+```
+
+## Validation Set Approach
+
+We explore the use of the validation set approach in order to estimate the test error rates that result from fitting various linear models on the `Auto` dataset. This dataset is from the `ISLR` library. Take a moment and inspect the codebook --- `?ISLR::Auto`. We will read in the data from the `Auto.csv` file and process do a little processing. 
+
+```{r load_auto, message = FALSE}
+auto_dat <- read_csv("data/Auto.csv") %>% 
+  clean_names()
+```
+
+We begin by using the sample() function to split the set of observations sample()
+into two halves, by selecting a random subset of 196 observations out of the original 392 observations. We refer to these observations as the training set.
+
+```{r}
+auto_validation <- tibble(train = auto_dat %>% sample_n(196) %>% list(),
+                          test  = auto_dat %>% setdiff(train) %>% list())
+```
+
+Let's keep it relatively simple and fit a simple linear regression using `horsepower` to predict `mpg` and polynomial regressions of up to degree 5 of `horsepower` to predict `mpg`. 
+
+```{r}
+# Setup tibble with model names and formulas
+model_def <- tibble(degree = 1:10,
+                    fmla = str_c("mpg ~ poly(horsepower, ", degree, ")"))
+
+# Combine validation setup with model fitting info
+auto_validation <- auto_validation %>% 
+  crossing(model_def)
+
+# Add model fits and assessment
+auto_validation <- auto_validation %>% 
+  mutate(model_fit = map2(fmla, train, lm),
+         test_mse = map2_dbl(model_fit, test, mse))
+```
+
+```{r}
+auto_validation %>% 
+  select(degree, test_mse) %>% 
+#  arrange(test_mse) %>% 
+  kable()
+
+auto_validation %>% 
+  select(degree, test_mse) %>% 
+  ggplot(aes(x = degree, y = test_mse)) +
+    geom_line()
+```
+
+
+## Leave-One-Out-Cross Validation
+
+```{r}
+auto_loocv <- auto_dat %>% 
+  crossv_kfold(nrow(auto_dat), id = "fold")
+
+auto_loocv <- auto_loocv %>% 
+  crossing(model_def) %>% 
+  mutate(model_fit = map2(fmla, train, lm),
+         fold_mse = map2_dbl(model_fit, test, mse))
+
+auto_loocv %>% 
+  group_by(degree) %>% 
+  summarise(test_mse = mean(fold_mse))
+
+auto_loocv %>% 
+  group_by(degree) %>% 
+  summarise(test_mse = mean(fold_mse)) %>% 
+    ggplot(aes(x = degree, y = test_mse)) +
+    geom_line()
+  
+```
+
+## $k$-fold Cross-Validation
+
+```{r}
+auto_10fold <- auto_dat %>% 
+  crossv_kfold(10, id = "fold")
+
+auto_10fold <- auto_10fold %>% 
+  crossing(model_def) %>% 
+  mutate(model_fit = map2(fmla, train, lm),
+         fold_mse = map2_dbl(model_fit, test, mse))
+
+auto_10fold %>% 
+    ggplot(aes(x = degree, y = fold_mse, color = fold)) +
+      geom_line() 
+
+auto_10fold %>% 
+  group_by(degree) %>% 
+  summarize(test_mse = mean(fold_mse)) %>%
+    ggplot(aes(x = degree, y = test_mse)) +
+      geom_line() +
+      geom_point()
+```
+
+## The Bootstrap
+
+We will we using the `Portfolio` dataset from `ISLR` --- see `?ISLR::Portfolio` for details. We will load the dataset from the `Portfolio.csv` file. 
+
+```{r, message = FALSE}
+portfolio_dat <- read_csv("data/Portfolio.csv") %>% clean_names()
+```
+
+```{r}
+portfolio_dat %>% 
+  skim()
+```
+
+### Estimating the Accuracy of a Statistic of Interest
+
+
+```{r}
+# Statistic of interest
+alpha_fn <- function(resample_obj){
+  resample_obj %>% 
+    # turn resample object into dataset
+    as_tibble() %>% 
+    summarise(alpha = (var(y)-cov(x,y))/(var(x)+var(y)-2*cov(x,y))) %>%
+    pull(alpha)
+}
+
+# Estimate on original data
+original_est <- portfolio_dat %>% 
+  alpha_fn()
+
+original_est
+```
+
+<!-- 
+modelr must be specified in Rmarkdown for some reason
+-->
+
+```{r, eval = FALSE}
+# create 1000 bootstrap estimates
+portfolio_boot <- portfolio_dat %>% 
+  bootstrap(1000, id = "boot_id") %>%  
+  mutate(alpha_boot = map_dbl(strap, alpha_fn)) 
+```
+
+
+```{r, echo = FALSE}
+# create 1000 bootstrap estimates
+portfolio_boot <- portfolio_dat %>% 
+  modelr::bootstrap(1000, id = "boot_id") %>%  
+  mutate(alpha_boot = map_dbl(strap, alpha_fn)) 
+```
+
+```{r}
+# Summary of bootstrap estimates
+portfolio_boot %>% 
+  select(alpha_boot) %>% 
+  skim()
+```
+
+```{r}
+# Boxplot of bootstrap estimates with estimate from original data (red X)
+portfolio_boot %>% 
+  ggplot(aes(x = "alpha_boot" , y = alpha_boot)) +
+    geom_boxplot() +
+    geom_point(aes(x = "alpha_boot", y = original_est), 
+               shape = 4, size = 4, color = "red") +
+    coord_flip() 
+```
+
+```{r}
+# Histogram of bootstrap estimates with estimate from original data (red dashed line)
+portfolio_boot %>% 
+  ggplot(aes(x = alpha_boot)) +
+    geom_histogram(bins = 25) +
+    geom_vline(aes(xintercept = original_est),
+               color = "red", linetype = "dashed")
+```
+
+```{r}
+# Bootstrap estimate of standard error for estimator 
+portfolio_boot %>% 
+  summarise(est_boot = mean(alpha_boot),
+            est_se   = sd(alpha_boot))
+```
+
+
+### Estimating the Accuracy of a Linear Regression Model
+
+```{r, eval = FALSE}
+# 1000 Bootstraps, fit models, get parameter estimates
+auto_boot <- auto_dat %>% 
+  bootstrap(1000, id = "boot_id") %>% 
+  mutate(model_fit = map(strap, lm, formula = mpg ~ horsepower),
+         mod_tidy  = map(model_fit, broom::tidy))
+```
+
+```{r, echo = FALSE}
+# 1000 Bootstraps, fit models, get parameter estimates
+auto_boot <- auto_dat %>% 
+  modelr::bootstrap(1000, id = "boot_id") %>% 
+  mutate(model_fit = map(strap, lm, formula = mpg ~ horsepower),
+         mod_tidy  = map(model_fit, broom::tidy))
+```
+
+```{r}
+# Examine bootstrap coefficient estimates
+auto_boot %>% 
+  unnest(mod_tidy) %>%
+  group_by(term) %>% 
+  select(term, estimate) %>% 
+  skim() %>% 
+  kable()
+```
+
+```{r}
+# Histogram of bootstrap coefficient estimates
+auto_boot %>% 
+  unnest(mod_tidy) %>%
+  ggplot(aes(x = estimate)) +
+    geom_histogram() +
+    facet_wrap(. ~ term, scale = "free_x")
+```
+
+```{r}
+# Boxplot of bootstrap coefficient estimates
+auto_boot %>% 
+  unnest(mod_tidy) %>%
+  ggplot(aes(x = "", y = estimate)) +
+    geom_boxplot() +
+    facet_wrap(. ~ term, scale = "free_x") +
+    coord_flip()
+```
+
+```{r}
+# Estimates using original data (including SE)
+auto_dat %>% 
+  lm(mpg ~ horsepower, data = .) %>% 
+  broom::tidy() %>% 
+  select(-statistic, -p.value)
+```
+
+```{r}
+# Estimates using bootstrap 
+auto_boot %>% 
+  unnest(mod_tidy) %>% 
+  group_by(term) %>% 
+  summarise(boot_est = mean(estimate),
+            est_se   = sd(estimate))
+```
